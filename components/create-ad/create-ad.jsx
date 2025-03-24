@@ -5,7 +5,7 @@ import { FormTextArea } from "../common/form-text-area";
 import { useEffect, useRef, useState } from "react";
 import apiClient from "../api-client";
 import { Select } from "../common/select";
-import { UploadIcon } from "../my-profile/icons/upload-icon";
+import { UploadIcon } from "../common/icons/upload-icon";
 import { SuccessMessage } from "../common/success-message";
 
 const poppins = Poppins({

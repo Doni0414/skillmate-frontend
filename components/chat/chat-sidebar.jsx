@@ -1,24 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChatContainer } from "./chat-container";
 import { ChatIcon } from "./icon/chat-icon";
+import apiClient from "../api-client";
 
-export function ChatSidebar({ onChatClick, activeChatId }) {
-  const chats = [
-    {
-      id: 1,
-      user: {
-        fullName: "Askar",
-        imageResourceId:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGxQwzkOhOPos_EQVdm6ElGi1iCpXiq4ZMiw&s",
-        lastMessage: {
-          text: "Just got back from a hiking trip!",
-          seen1: false,
-          date: 1741712429000,
-          authorId: 2,
-        },
-      },
-    },
-  ];
+export function ChatSidebar({ onChatClick, activeChatId, currentUserId }) {
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    apiClient
+      .get("/chats")
+      .then((response) => {
+        setChats(response.data);
+      })
+      .catch((error) => {
+        console.log("error while obtaining chats", error);
+      });
+  }, []);
+
+  console.log(chats);
 
   return (
     <div className="w-fit px-6 pt-[30px] h-screen bg-white">
@@ -32,6 +31,7 @@ export function ChatSidebar({ onChatClick, activeChatId }) {
           key={idx}
           isActive={chat.id == activeChatId}
           onClick={onChatClick}
+          currentUserId={currentUserId}
         />
       ))}
     </div>

@@ -2,6 +2,9 @@ import clsx from "clsx";
 import { Inter, Roboto } from "next/font/google";
 import Image from "next/image";
 import { computeDateString } from "./chat-container";
+import { useEffect, useState } from "react";
+import apiClient from "../api-client";
+import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -18,17 +21,18 @@ export function MessageContainer({ message, currentUserId }) {
     return currentUserId === messageAuthorId ? "own" : "another";
   };
 
-  const messageType = isOwnMessage(currentUserId, message.authorId);
+  const messageType = isOwnMessage(currentUserId, message.senderId);
 
-  const dateString = computeDateString(message.date);
+  const dateString = computeDateString(message.createdAt);
 
   const containerClassName = messageType === "own" ? "justify-end" : "";
 
   const messageClassName = clsx(
     "relative -top-[5px]",
-    messageType === "own" && "right-14",
+    messageType === "own" && "right-[56px]",
     messageType === "another" && "left-14",
   );
+
   return (
     <div className={clsx("flex", containerClassName)}>
       <div>
@@ -38,7 +42,7 @@ export function MessageContainer({ message, currentUserId }) {
           )}
           <ProfileContainer
             profileType={messageType}
-            userId={message.authorId}
+            userId={message.senderId}
           />
           {messageType === "another" && (
             <div className="text-[#A0A0A0] text-[12px]">{dateString}</div>
@@ -46,7 +50,7 @@ export function MessageContainer({ message, currentUserId }) {
         </div>
         <MessageUiKit
           messageType={messageType}
-          text={message.text}
+          text={message.content}
           className={messageClassName}
         />
       </div>
@@ -55,11 +59,18 @@ export function MessageContainer({ message, currentUserId }) {
 }
 
 function ProfileContainer({ profileType, userId, className }) {
-  const user = {
-    fullName: "Askar",
-    imageResourceId:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGxQwzkOhOPos_EQVdm6ElGi1iCpXiq4ZMiw&s",
-  };
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    apiClient
+      .get("/users/profile/" + userId)
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.log("error while obtaining profile of user", error);
+      });
+  }, []);
   const nameContainerClassName = clsx(
     {
       own: clsx("font-medium text-[#515151] text-[16px] ", inter.className),
@@ -75,7 +86,7 @@ function ProfileContainer({ profileType, userId, className }) {
       <Image
         width={48}
         height={48}
-        src={user.imageResourceId}
+        src={RESOURCES_PREFIX + user.imageResourceId}
         alt="profile"
         className="w-12 h-12 rounded-full"
       />
@@ -99,7 +110,7 @@ function MessageUiKit({ messageType, text, className }) {
     another: "bg-white text-[#515151] rounded-tl-[1px]",
   };
   const computedClassName = clsx(
-    "px-6 py-4 w-fit max-w-[500px] text-[18px] rounded-[14px]",
+    "px-6 py-4  max-w-[500px] text-[18px] rounded-[14px] break-all",
     className,
     inter.className,
     uiKitStyles[messageType],

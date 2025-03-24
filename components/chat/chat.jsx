@@ -1,8 +1,12 @@
 import clsx from "clsx";
 import { Roboto } from "next/font/google";
 import Image from "next/image";
-import { MessageContainer, MessageUiKit } from "./message";
+import { inter, MessageContainer, MessageUiKit } from "./message";
 import { SendMessageIcon } from "./icon/send-message-icon";
+import { useEffect, useState } from "react";
+import apiClient from "../api-client";
+import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
+import { otherUserId } from "./chat-container";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -13,26 +17,32 @@ const chatIdIsChoosen = (chatId) => {
   return chatId > 0;
 };
 
-export function Chat({ chatId }) {
-  const chat = {
-    id: 1,
-    user: {
-      fullName: "Askar",
-      imageResourceId:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGxQwzkOhOPos_EQVdm6ElGi1iCpXiq4ZMiw&s",
-      lastMessage: {
-        text: "Just got back from a hiking trip!",
-        seen1: false,
-        date: 1741712429000,
-        authorId: 2,
-      },
-    },
-  };
+const chatIsChoosen = (chat) => {
+  return chat.name;
+};
+
+export function Chat({ chat, currentUserId }) {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    apiClient
+      .get("/users/profile")
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.log("Error while obtaining user", error);
+      });
+  }, []);
   return (
     <div className="grow">
-      <ChatHeader chat={chat} chatId={chatId} />
-      {chatIdIsChoosen(chatId) ? (
-        <ChatBody chatId={chat.id} currentUserId={1} />
+      <ChatHeader chat={chat} currentUserId={user.id} />
+      {chatIsChoosen(chat) ? (
+        <ChatBody
+          chatId={chat.id}
+          currentUserId={user.id}
+          receiverId={chat.receiverId}
+        />
       ) : (
         <EmptyChatBody />
       )}
@@ -48,19 +58,35 @@ function EmptyChatBody() {
   );
 }
 
-function ChatHeader({ chat, chatId }) {
+function ChatHeader({ chat, chatId, currentUserId }) {
+  console.log("chat", chat);
+  const [otherUser, setOtherUser] = useState({});
+
+  useEffect(() => {
+    apiClient
+      .get("/users/profile/" + otherUserId(chat, currentUserId))
+      .then((response) => {
+        setOtherUser(response.data);
+      })
+      .catch((error) => {
+        console.log("error while obtaining chat user", error);
+      });
+  }, [chat]);
+
+  console.log("other user" + JSON.stringify(otherUser));
   return (
     <div className="h-[90px] px-11 py-4 bg-white">
-      {chatIdIsChoosen(chatId) && (
+      {chatIsChoosen(chat) && (
         <div className="flex gap-5 items-center">
           <Image
-            src={chat.user.imageResourceId}
+            src={RESOURCES_PREFIX + otherUser.imageResourceId}
             width={56}
             height={56}
             className="w-14 h-14 rounded-full"
+            alt="other user image"
           />
           <div className={clsx(roboto.className, "text-[#262626] text-[20px]")}>
-            {chat.user.fullName}
+            {otherUser.fullName}
           </div>
         </div>
       )}
@@ -68,39 +94,26 @@ function ChatHeader({ chat, chatId }) {
   );
 }
 
-function ChatBody({ chatId, currentUserId }) {
-  const messages = [
-    {
-      id: 1,
-      authorId: 1,
-      text: "Hey Askar, how's it going?",
-      date: 1741712429000,
-    },
-    {
-      id: 2,
-      authorId: 2,
-      text: "Hi Amina! I'm doing well, thanks. ",
-      date: 1742041204000,
-    },
-    {
-      id: 2,
-      authorId: 2,
-      text: "Hi Amina! I'm doing well, thanks. ",
-      date: 1742041204000,
-    },
-    {
-      id: 2,
-      authorId: 2,
-      text: "Hi Amina! I'm doing well, thanks. ",
-      date: 1742041204000,
-    },
-    {
-      id: 2,
-      authorId: 2,
-      text: "Hi Amina! I'm doing well, thanks. ",
-      date: 1742041204000,
-    },
-  ];
+function ChatBody({ chatId, currentUserId, receiverId }) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      apiClient
+        .get("/messages/chat/" + chatId)
+        .then((response) => {
+          setMessages(response.data);
+        })
+        .catch((error) => {
+          console.log("error while obtaining chat messages", error);
+        });
+    }, 500);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [chatId]);
+
+  console.log(messages);
   return (
     <div className="relative bg-[#E1F6FF] min-h-screen px-8 py-[90px] space-y-5">
       {messages.map((message, index) => (
@@ -111,20 +124,58 @@ function ChatBody({ chatId, currentUserId }) {
         />
       ))}
       <div className="flex justify-center">
-        <SendMessageContainer />
+        <SendMessageContainer
+          chatId={chatId}
+          currentUserId={currentUserId}
+          receiverId={receiverId}
+        />
       </div>
     </div>
   );
 }
 
-function SendMessageContainer() {
+function SendMessageContainer({ chatId, currentUserId, receiverId }) {
+  const [messageText, setMessageText] = useState("");
+
+  const handleSendMessage = () => {
+    if (messageText && messageText.trim() !== "") {
+      apiClient
+        .post(
+          "/messages",
+          {
+            content: messageText,
+            senderId: currentUserId,
+            receiverId: receiverId,
+            messageType: "TEXT",
+            chatId: chatId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        )
+        .then((response) => {
+          console.log("text is successfully sent");
+          setMessageText("");
+        })
+        .catch((error) => {
+          console.log("error while sending message", error);
+        });
+    }
+  };
   return (
     <div className="fixed flex items-center gap-4 bottom-6 w-[954px] pl-4 pr-14 py-4 bg-white rounded-[20px]">
       <input
+        value={messageText}
+        onChange={(event) => setMessageText(event.target.value)}
         placeholder="Type message..."
         className="grow w-[700px] text-2xl text-[#888888] focus:outline-none"
       />
-      <button className="ml-auto px-[10px] py-[10px] flex items-center gap-[2px] bg-[#00A3FF] rounded-[12px] cursor-pointer text-white font-medium text-[20px] hover:bg-[#00a2ffe1] transition-colors">
+      <button
+        onClick={handleSendMessage}
+        className="ml-auto px-[10px] py-[10px] flex items-center gap-[2px] bg-[#00A3FF] rounded-[12px] cursor-pointer text-white font-medium text-[20px] hover:bg-[#00a2ffe1] transition-colors"
+      >
         Send <SendMessageIcon />
       </button>
     </div>

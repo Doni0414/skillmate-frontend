@@ -1,21 +1,22 @@
 import clsx from "clsx";
-import { UserAccountIcon } from "./icons/user-account-icon";
-import { PlusIcon } from "./icons/plus-icon";
+import { UserAccountIcon } from "../common/icons/user-account-icon";
+import { PlusIcon } from "../common/icons/plus-icon";
 import { Fira_Sans, Poppins } from "next/font/google";
 import { FieldErrorMessage } from "../common/field-error-message";
 import { Select } from "../common/select";
 import { CountrySelector } from "../common/country-selector";
 import { RESOURCES_PREFIX, useMyProfileState } from "./use-my-profile-state";
 import Image from "next/image";
-import { AddIcon } from "./icons/add-icon";
+import { AddIcon } from "../common/icons/add-icon";
 import { Modal } from "../common/modal";
-import { UploadIcon } from "./icons/upload-icon";
-import { DocumentIcon } from "./icons/document-icon";
-import { PdfIcon } from "./icons/pdf-icon";
-import { PictureIcon } from "./icons/picture-icon";
+import { UploadIcon } from "../common/icons/upload-icon";
+import { DocumentIcon } from "../common/icons/document-icon";
+import { PdfIcon } from "../common/icons/pdf-icon";
+import { PictureIcon } from "../common/icons/picture-icon";
 import { SuccessMessage } from "../common/success-message";
 import { FormField } from "../common/FormField";
 import { FormTextArea } from "../common/form-text-area";
+import { ViewSkillPopup } from "../common/view-skill-popup";
 
 export const PROFICIENCY_LEVELS = ["Beginner", "Intermediate", "Pro"];
 export const PROFICIENCY_LEVELS_VALUES = ["BEGINNER", "INTERMEDIATE", "PRO"];
@@ -434,161 +435,6 @@ function AddSkillPopup({
       </div>
     </form>
   );
-}
-
-function ViewSkillPopup({
-  skill,
-  className,
-  downloadResource,
-  fileToAchievement,
-}) {
-  return (
-    <div className="px-[52px] py-16 bg-[#FFF4D1] border border-[#FFC107] rounded-[20px]">
-      <div
-        className={clsx(
-          firaSans.className,
-          "m-auto mb-[71px] w-fit text-[29px] text-black/70 font-semibold ",
-        )}
-      >
-        {skill.name}
-      </div>
-
-      <div className="mb-10 w-[609px] px-5 py-[15px] rounded-[7px] bg-[#F2F4F7] text-[17px] text-black/60 font-medium">
-        {skill.description}
-      </div>
-
-      <div className="mb-10 w-fit px-[9px] py-4 rounded-[7px] bg-[#F2F4F7] text-[17px] text-black/60 font-medium">
-        Level: {skill.level}
-      </div>
-
-      <AchievementsList
-        achievements={skill.achievements}
-        achievementIds={skill.achievementIds}
-        downloadResource={downloadResource}
-        fileToAchievement={fileToAchievement}
-      />
-    </div>
-  );
-}
-
-function AchievementsList({
-  achievements,
-  isEditable,
-  className,
-  handleDeleteAchievement,
-  achievementIds,
-  downloadResource,
-  fileToAchievement,
-}) {
-  return (
-    <div className={className}>
-      <div
-        className={clsx(
-          firaSans.className,
-          "mb-7 font-medium text-[20px] text-black/70",
-        )}
-      >
-        Achievements:
-      </div>
-
-      {(!achievements || achievements.length == 0) &&
-      (!achievementIds || achievementIds.length === 0) ? (
-        <div className="text-[16px] text-black/70">No achievements</div>
-      ) : (
-        <div className="space-y-[5px]">
-          {achievementIds &&
-            achievementIds.map((achievementId, index) => (
-              <AchievementCard
-                key={index}
-                achievement={{
-                  ...fileToAchievement(downloadResource(achievementId)),
-                  id: achievementId,
-                }}
-              />
-            ))}
-          {achievements &&
-            achievements.map((achievement, index) =>
-              isEditable ? (
-                <DeletableAchievementCard
-                  index={index}
-                  key={index}
-                  achievement={achievement}
-                  handleDeleteAchievement={handleDeleteAchievement}
-                />
-              ) : (
-                <AchievementCard key={index} achievement={achievement} />
-              ),
-            )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function AchievementCard({ id, achievement }) {
-  return (
-    <div
-      className={clsx(
-        firaSans.className,
-        "flex items-center gap-4 w-fit pl-4 pr-6 py-3 rounded-[8px] bg-[#F2F4F7]",
-      )}
-    >
-      <AchievementIcon fileName={achievement.fileName} />
-      <div className="w-[150px] text-[16px] text-[#4B4B4B] text-ellipsis whitespace-nowrap overflow-hidden">
-        {achievement.fileName}
-      </div>
-
-      {achievement.id && (
-        <div className="flex items-center gap-2">
-          <div className="w-[3px] h-[3px] rounded-full bg-[#767676]"></div>
-          <a
-            href={RESOURCES_PREFIX + achievement.id}
-            className="text-[14px] text-[#005FAD]"
-          >
-            Download
-          </a>
-        </div>
-      )}
-
-      <div className="text-black/70 text-[14px]">{achievement.size}</div>
-    </div>
-  );
-}
-
-function DeletableAchievementCard({
-  index,
-  achievement,
-  handleDeleteAchievement,
-}) {
-  return (
-    <div className="flex items-center gap-4">
-      <AchievementCard achievement={achievement} />
-      <button
-        className="text-gray-500 hover:text-black cursor-pointer"
-        onClick={(e) => handleDeleteAchievement(e, index)}
-      >
-        ✖
-      </button>
-    </div>
-  );
-}
-
-function AchievementIcon({ fileName }) {
-  const isDoc = (fileName) => {
-    return fileName.endsWith(".doc") || fileName.endsWith(".docx");
-  };
-
-  const isPdf = (fileName) => {
-    return fileName.endsWith(".pdf");
-  };
-
-  if (isDoc(fileName)) {
-    return <DocumentIcon className="text-[#005FAD]" />;
-  } else if (isPdf(fileName)) {
-    return <PdfIcon className="text-[#005FAD]" />;
-  }
-
-  return <PictureIcon className="text-[#005FAD]" />;
 }
 
 function EditSkillPopup({ skill, handleSkillOnEditFieldChange }) {
