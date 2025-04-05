@@ -5,12 +5,12 @@ export const getResourceURLById = (resourceId) => {
     return RESOURCES_PREFIX + resourceId;
 }
 export const getUserById = async (userId) => {
-    const data = await apiClient.get("/users/profile/" + userId);
-    return data;
+    const response = await apiClient.get("/users/profile/" + userId);
+    return response;
 }
 
 export const getPublicationsByCategoriesAndUserIdAndPageAndPageSize = async (categories, userId, page, pageSize) => {
-    const data = await apiClient.get("/posts", {
+    const response = await apiClient.get("/posts", {
         params: {
             categories: categories,
             userId: userId,
@@ -21,5 +21,20 @@ export const getPublicationsByCategoriesAndUserIdAndPageAndPageSize = async (cat
             indexes: null
         }
     })
-    return data;
+    return response;
+}
+
+export const getLikesCountByPostId = async (postId) => {
+    const response = await apiClient.get(`/posts/${postId}/likes`)
+    return response;
+}
+
+export const getCommentsByPostId = async (postId) => {
+    const response = await apiClient.get(`/posts/${postId}/comments`);
+    return response.data;
+}
+
+export const getCommentsCountByPostId = async (postId) => {
+    const comments = await getCommentsByPostId(postId)
+    return comments.length;
 }

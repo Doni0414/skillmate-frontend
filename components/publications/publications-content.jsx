@@ -45,6 +45,7 @@ export function PublicationsContent({ user }) {
       />
       <SearchPublicationsBar
         className={clsx("mb-[82px]", firaSans.className)}
+        setPublications={setPublications}
       />
       <Publications publications={publications} user={user} />
     </div>
@@ -78,17 +79,39 @@ function CreatePostButton({ className, user }) {
   );
 }
 
-function SearchPublicationsBar({ className }) {
+function SearchPublicationsBar({ className, setPublications }) {
+  const [category, setCategory] = useState("");
+  const handleSearchButtonClick = async () => {
+    const page = 0;
+    const pageSize = 1000000;
+    const userId = null;
+    const categories = [category];
+
+    const fetchedPublications =
+      await getPublicationsByCategoriesAndUserIdAndPageAndPageSize(
+        categories,
+        userId,
+        page,
+        pageSize,
+      );
+
+    setPublications(fetchedPublications.data);
+  };
   return (
     <div className="flex relative">
       <input
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
         placeholder="I am interested in..."
         className={clsx(
           "w-[664px] pl-[58px] h-[70px] text-white text-[22px] bg-[#4A6DC5] rounded-[15px] focus:outline-none placeholder:text-white/80",
           className,
         )}
       />
-      <button className="px-10 h-[70px] bg-[#4470E2] rounded-[15px] cursor-pointer absolute right-0">
+      <button
+        onClick={handleSearchButtonClick}
+        className="px-10 h-[70px] bg-[#4470E2] rounded-[15px] cursor-pointer absolute right-0"
+      >
         <SearchIcon />
       </button>
     </div>
