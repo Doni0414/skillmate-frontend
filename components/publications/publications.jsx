@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  getCommentsByPostId,
   getCommentsCountByPostId,
   getLikesCountByPostId,
   getResourceURLById,
@@ -13,6 +14,9 @@ import { CommentIcon } from "./icons/comment-icon";
 import apiClient from "../api-client";
 import { SendCommentIcon } from "./icons/send-comment-icon";
 import { SuccessMessage } from "../common/success-message";
+import { Comments } from "./comments";
+import { PagedElement } from "../common/paged-element";
+import { PlusIcon } from "../common/icons/plus-icon";
 
 export function Publications({ publications, user }) {
   return (
@@ -26,18 +30,50 @@ export function Publications({ publications, user }) {
 
 function Publication({ publication, user }) {
   const [author, setAuthor] = useState({});
+  const [allComments, setAllComments] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [commentsPage, setCommentsPage] = useState(1);
+  const publicationRef = useRef(null);
 
   useEffect(() => {
     fetchData();
+    const interval = setInterval(() => {
+      fetchAllCommentsInInterval();
+      return () => {
+        clearInterval(interval);
+      };
+    }, 3_000);
   }, []);
 
+  const fetchAllCommentsInInterval = async () => {
+    const fetchedComments = await getCommentsByPostId(publication.id);
+    setAllComments(fetchedComments);
+
+    console.log("fetching comments for " + publication.id);
+
+    setComments(fetchedComments.slice(0, commentsPage * COMMENTS_PER_PAGE));
+  };
+
+  const COMMENTS_PER_PAGE = 10;
   const fetchData = async () => {
     const fetchedAuthor = await getUserById(publication.creatorId);
     setAuthor(fetchedAuthor.data);
+
+    const fetchedComments = await getCommentsByPostId(publication.id);
+    setAllComments(fetchedComments);
+
+    setComments(fetchedComments.slice(0, COMMENTS_PER_PAGE));
+  };
+
+  const loadAllCommentsTillPage = (page) => {
+    setComments(allComments.slice(0, page * COMMENTS_PER_PAGE));
   };
 
   return (
-    <div className="px-5 py-5 rounded-[33px] bg-[#F7F7F7] shadow-2xl">
+    <div
+      ref={publicationRef}
+      className="px-5 py-5 rounded-[33px] bg-[#F7F7F7] shadow-2xl"
+    >
       <PublicationAuthorContainer author={author} />
       <Image
         width={483}
@@ -58,6 +94,38 @@ function Publication({ publication, user }) {
         description={publication.text}
       />
       <AddCommentContainer user={user} publication={publication} />
+      <Comments
+        className="mt-7 mb-7"
+        comments={comments}
+        publication={publication}
+        user={user}
+      />
+      <CommentsMoreButton
+        page={commentsPage}
+        setPage={setCommentsPage}
+        loadAllCommentsTillPage={loadAllCommentsTillPage}
+      />
+    </div>
+  );
+}
+
+function CommentsMoreButton({ className, loadAllCommentsTillPage }) {
+  const onClick = () => {
+    setPage((lastPage) => {
+      loadAllCommentsTillPage(lastPage + 1);
+      return lastPage + 1;
+    });
+  };
+
+  return (
+    <div className="flex justify-center">
+      <button
+        title="More comments"
+        className="cursor-pointer"
+        onClick={onClick}
+      >
+        <PlusIcon />
+      </button>
     </div>
   );
 }
@@ -106,9 +174,6 @@ function PublicationDescription({ className, author, description }) {
     "Recently, I have started learning english! Wish me your bests! Recently, I have started learning english! Wish me your bests! Recently, I have started learning english! Wish me your bests!";
   return (
     <div className="flex gap-1">
-      {/* <div className={clsx("font-bold text-[17px]", mulish.className)}>
-        {author.fullName}
-      </div> */}
       <div
         className={clsx(
           "w-[483px] text-[15px] text-wrap",

@@ -65,7 +65,7 @@ function NavigationButtons({ setIsCreateAdPopupOpen }) {
   return (
     <div className="flex items-center gap-[77px] text-[18px] text-black/70 font-medium mr-[167px]">
       <a href="/chat">Chat</a>
-      <a href="#">Posts</a>
+      <a href="/publications">Posts</a>
       <button onClick={handleClickOnCreateAdButton} className="cursor-pointer">
         Create ad
       </button>
