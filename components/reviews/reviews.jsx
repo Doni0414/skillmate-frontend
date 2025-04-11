@@ -43,21 +43,10 @@ const REVIEWS = [
   },
 ];
 
-export function ReviewsContent({ userId, reviews, setReviews }) {
-  const [user, setUser] = useState();
-
+export function ReviewsContent({ user, reviews, setReviews }) {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-    apiClient
-      .get("/users/profile/" + userId)
-      .then((response) => {
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.log("error while obtaining user", error);
-      });
-
     apiClient
       .get("/users/profile")
       .then((response) => {

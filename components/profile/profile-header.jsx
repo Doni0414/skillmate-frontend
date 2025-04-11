@@ -8,22 +8,7 @@ import { StarsContainer } from "../common/stars-container";
 import apiClient from "../api-client";
 import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
 
-export function ProfileHeader({ userId, className, reviews }) {
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    apiClient
-      .get("/users/profile/" + userId)
-      .then((response) => {
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.log("Error while obtaining user info in reviews", error);
-      });
-  }, []);
-
-  if (!user) return <p></p>;
-  console.log(userId);
+export function ProfileHeader({ user, className, reviews }) {
   return (
     <div className={className}>
       <div className="ml-[272px] w-fit flex gap-[164px]">
@@ -84,28 +69,6 @@ function UserInfoContainer({ user, className, reviews }) {
 }
 
 function SkillsContainer({ user }) {
-  // const skills = [
-  //   {
-  //     id: 1,
-  //     name: "English",
-  //     description:
-  //       "I am an English teacher with 8 years of experience. I help students of all levels master the language easily and effectively, whether it's exam preparation, improving conversational skills, or overcoming the language barrier.",
-  //     level: "Beginner",
-  //     achievements: [
-  //       {
-  //         id: 1,
-  //         fileName: "Certificate.pdf",
-  //         size: "1.2 MB",
-  //       },
-  //       {
-  //         id: 2,
-  //         fileName: "Resume.pdf",
-  //         size: "0.98 MB",
-  //       },
-  //     ],
-  //   },
-  // ];
-
   const [skills, setSkills] = useState([]);
 
   useEffect(() => {
