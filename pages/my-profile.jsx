@@ -1,7 +1,9 @@
+import apiClient from "../components/api-client";
+import { withAuth } from "../components/auth";
 import { Header } from "../components/header/header";
 import { MyProfile } from "../components/my-profile/my-profile";
 
-export default function MyProfilePage() {
+function MyProfilePage() {
   return (
     <div className="bg-[#E1F6FF] min-h-screen">
       <Header />
@@ -9,3 +11,5 @@ export default function MyProfilePage() {
     </div>
   );
 }
+
+export default withAuth(MyProfilePage, apiClient);

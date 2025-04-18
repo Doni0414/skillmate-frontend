@@ -38,3 +38,12 @@ export const getCommentsCountByPostId = async (postId) => {
     const comments = await getCommentsByPostId(postId)
     return comments.length;
 }
+
+export const logout = async (postId) => {
+    return await apiClient.get("/users/auth/logout");
+}
+
+export const me = async () => {
+    const response = await apiClient.get("/users/profile");
+    return response;
+}

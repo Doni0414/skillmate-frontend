@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Header } from "../components/header/header";
 import PublicationsContent from "../components/publications";
+import { withAuth } from "../components/auth";
+import apiClient from "../components/api-client";
 
-export default function PublicationsPage() {
+function PublicationsPage() {
   const [user, setUser] = useState({});
   return (
     <div className="pb-10">
@@ -11,3 +13,5 @@ export default function PublicationsPage() {
     </div>
   );
 }
+
+export default withAuth(PublicationsPage, apiClient);

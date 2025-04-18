@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiClient from "../api-client";
+import { me } from "../api";
 
 export function useHeaderState() {
     const [isCreateAdPopupOpen, setIsCreateAdPopupOpen] = useState(false);
@@ -8,16 +8,20 @@ export function useHeaderState() {
         setIsCreateAdPopupOpen(false);
     }
 
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState();
 
     useEffect(() => {
-        apiClient.get("/users/profile")
-        .then(response => {
-            setUser(response.data);
-        }).catch(error => {
-            console.log("Error while obtaining user in header", error);
-        });
+        fetchData();
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const response = await me();
+            setUser(response.data);
+        } catch (error) {
+
+        }
+    }
 
     return {
         user,

@@ -1,7 +1,9 @@
+import apiClient from "../components/api-client";
+import { withAuth } from "../components/auth";
 import { ChatPageContent } from "../components/chat/chat-page-content";
 import { Header } from "../components/header/header";
 
-export default function ChatPage() {
+function ChatPage() {
   return (
     <div>
       <Header />
@@ -9,3 +11,5 @@ export default function ChatPage() {
     </div>
   );
 }
+
+export default withAuth(ChatPage, apiClient);

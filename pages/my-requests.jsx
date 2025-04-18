@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import apiClient from "../components/api-client";
 import { Header } from "../components/header/header";
 import Router from "next/router";
+import { withAuth } from "../components/auth";
 
-export default function MyRequestsPage() {
+function MyRequestsPage() {
   const [user, setUser] = useState({});
   const [requests, setRequests] = useState([]);
 
@@ -69,3 +70,5 @@ function ExchangeRequest({ request }) {
     </div>
   );
 }
+
+export default withAuth(MyRequestsPage, apiClient);

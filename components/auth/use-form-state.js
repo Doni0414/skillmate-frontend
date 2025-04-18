@@ -2,11 +2,20 @@ import Router from "next/router";
 import { useEffect, useRef, useState } from "react";
 import apiClient from "../api-client";
 
-export function useFormState() {
+function isSignupToggled(authType) {
+    console.log(authType)
+    return authType === 'signup';
+}
 
+export function useFormState(authType) {
+    console.log(isSignupToggled(authType))
     // auth form header state
-    const [ signupToggled, setSignupToggled ] = useState(false);
+    const [ signupToggled, setSignupToggled ] = useState(isSignupToggled(authType));
     const signinToggled = !signupToggled;
+
+    useEffect(() => {
+        setSignupToggled(isSignupToggled(authType))
+    }, [authType])
 
     // login data state
     const [loginFormData, setLoginFormData] = useState({

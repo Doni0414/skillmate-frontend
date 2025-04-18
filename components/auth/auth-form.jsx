@@ -5,10 +5,13 @@ import { Modal } from "../common/modal";
 import { FieldErrorMessage } from "../common/field-error-message";
 import { Select } from "../common/select";
 import { CountrySelector } from "../common/country-selector";
+import { useState } from "react";
+import apiClient from "../api-client";
+import Router from "next/router";
 
 const firaSans = Fira_Sans({ subsets: ["latin"], weight: ["400"] });
 
-export function AuthForm() {
+export function AuthForm({ type }) {
   const {
     signupToggled,
     signinToggled,
@@ -31,7 +34,7 @@ export function AuthForm() {
     handleSendCodeVerificationClick,
     handleResendCodeClick,
     closeVerification,
-  } = useFormState();
+  } = useFormState(type);
 
   return (
     <div className={clsx("mx-auto mt-15 w-fit pb-10", firaSans.className)}>
@@ -118,6 +121,10 @@ function SignInForm({
   handleDoNotHaveAccountClick,
   loginFieldErrors,
 }) {
+  const handleClickOnForgotPassword = () => {
+    Router.push("/forgot-password");
+  };
+
   return (
     <form
       onSubmit={handleLogin}
@@ -149,6 +156,12 @@ function SignInForm({
         <span href="" className="text-black/100">
           Sign up
         </span>
+      </button>
+      <button
+        onClick={handleClickOnForgotPassword}
+        className="text-[17px] text-black/70 cursor-pointer hover:text-black/90"
+      >
+        Forgot password?
       </button>
     </form>
   );

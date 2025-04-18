@@ -20,29 +20,6 @@ const firaSans = Fira_Sans({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-const REVIEWS = [
-  {
-    userId: 1,
-    text: "Very good!",
-    rating: 4.5,
-  },
-  {
-    userId: 2,
-    text: "I like it!",
-    rating: 4,
-  },
-  {
-    userId: 1,
-    text: "Very good!",
-    rating: 4.4,
-  },
-  {
-    userId: 2,
-    text: "I like it!",
-    rating: 4.4,
-  },
-];
-
 export function ReviewsContent({ user, reviews, setReviews }) {
   const [currentUser, setCurrentUser] = useState();
 
