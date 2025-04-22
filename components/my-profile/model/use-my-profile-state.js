@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import apiClient from "../api-client";
+import apiClient from "../../api-client";
+import { validateAddSkillForm } from "./validate-add-skill-form";
+import { hasErrors } from "./has-errors";
 
 export const RESOURCES_PREFIX = "http://localhost:8080/api/resources/";
 
@@ -30,7 +32,6 @@ export function useMyProfileState() {
                 skills: response.data
             }))
         setIsLoading(false);
-
         });
     })
     .catch(error => {
@@ -63,6 +64,7 @@ export function useMyProfileState() {
     });
 
     const handleUserInfoChange = (field, value) => {
+        console.log(field + ": " + value)
         console.log(userInfo)
         setEditableUserInfo(lastUserInfo => ({
             ...lastUserInfo,
@@ -128,8 +130,13 @@ export function useMyProfileState() {
 
     const handleClickOnSaveButtonInAddSkillPopup = (e) => {
         e.preventDefault();
-        console.log(addSkillForm);
-        console.log(achievementFiles);
+        
+        const errors = validateAddSkillForm(addSkillForm);
+
+        if (hasErrors(errors)) {
+            setAddSkillFormErrors(errors);
+            return;
+        }
 
         const formData = new FormData();
         achievementFiles.forEach(file => formData.append("achievements", file))
@@ -305,41 +312,3 @@ export function useMyProfileState() {
         handleClickOnDeleteSkillButton
     }
 }
-
-// {
-//     fullName: "Agabek Nurdaulet",
-//     email: "nurdauletagabek2@gmail.com",
-//     gender: "Male",
-//     country: "Kazakhstan",
-//     skills: [
-//         {
-//             id: 1,
-//             name: "English",
-//             description: "I am an English teacher with 8 years of experience. I help students of all levels master the language easily and effectively, whether it's exam preparation, improving conversational skills, or overcoming the language barrier.",
-//             level: "High",
-//             achievements: [
-//                 {
-//                     id: 1,
-//                     fileName: "Document example.doc",
-//                     size: "5.7MB"
-//                 },
-//                 {
-//                     id: 2,
-//                     fileName: "Picture.png",
-//                     size: "5.7MB"
-//                 },
-//                 {
-//                     id: 3,
-//                     fileName: "Resume.pdf",
-//                     size: "3.9MB"
-//                 }
-//             ]
-//         },
-//         {
-//             id: 2,
-//             name: "Java programming",
-//             description: "Description 2",
-//             level: "Medium"
-//         }
-//     ]
-// }

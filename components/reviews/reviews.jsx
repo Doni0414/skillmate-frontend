@@ -11,7 +11,7 @@ import { FormTextArea } from "../common/form-text-area";
 import Image from "next/image";
 import { EmptyStarIcon } from "../profile/icon/empty-star";
 import apiClient from "../api-client";
-import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
+import { RESOURCES_PREFIX } from "../my-profile/model/use-my-profile-state";
 import { SuccessMessage } from "../common/success-message";
 import { FailureMessage } from "../common/failure-message";
 

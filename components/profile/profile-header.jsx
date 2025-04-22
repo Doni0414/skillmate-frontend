@@ -6,7 +6,7 @@ import { Modal } from "../common/modal";
 import { ViewSkillPopup } from "../common/view-skill-popup";
 import { StarsContainer } from "../common/stars-container";
 import apiClient from "../api-client";
-import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
+import { RESOURCES_PREFIX } from "../my-profile/model/use-my-profile-state";
 
 export function ProfileHeader({ user, className, reviews }) {
   return (

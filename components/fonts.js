@@ -1,4 +1,4 @@
-import { Fira_Sans, Inter, Mulish, Raleway, Red_Hat_Display, Roboto } from "next/font/google";
+import { Fira_Sans, Inter, Mulish, Poppins, Raleway, Red_Hat_Display, Roboto } from "next/font/google";
 
 export const firaSans = Fira_Sans({
   subsets: ["latin"],
@@ -23,5 +23,12 @@ export const roboto = Roboto({
 export const redHatDisplay = Red_Hat_Display({ subsets: ["latin"] });
 export const raleway = Raleway({
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
+
+export const poppins = Poppins({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });

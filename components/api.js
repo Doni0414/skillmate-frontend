@@ -1,8 +1,8 @@
 import apiClient from "./api-client"
-import { RESOURCES_PREFIX } from "./my-profile/use-my-profile-state";
+import { RESOURCES_PREFIX } from "./my-profile/model/use-my-profile-state";
 
 export const getResourceURLById = (resourceId) => {
-    return RESOURCES_PREFIX + resourceId;
+    return resourceId ? RESOURCES_PREFIX + resourceId : null;
 }
 export const getUserById = async (userId) => {
     const response = await apiClient.get("/users/profile/" + userId);
@@ -70,3 +70,32 @@ export const resetPassword = (token, newPassword) => {
         }
     })
 }
+
+export const downloadResource = async (resourceId) => {
+    try {
+      // Fetch the file from the backend
+      const response = await fetch(
+        `http://localhost:8080/api/resources/${resourceId}`,
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
+
+      // Try extracting filename from Content-Disposition header
+      const disposition = response.headers.get("Content-Disposition");
+      let fileName = `resource_${resourceId}.bin`; // Default filename
+
+      if (disposition && disposition.includes("filename=")) {
+        fileName = disposition.split("filename=")[1].replace(/['"]/g, "");
+      }
+
+      console.log("filename is " + fileName);
+
+      const blob = await response.blob(); // Convert response to Blob
+      console.log(blob);
+      console.log(new File([blob], fileName, { type: blob.type }));
+      return new File([blob], fileName, { type: blob.type }); // Create a File object
+    } catch (error) {
+      console.error("Error downloading resource:", error);
+      return null;
+    }
+  }
