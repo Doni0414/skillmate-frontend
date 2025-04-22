@@ -47,3 +47,26 @@ export const me = async () => {
     const response = await apiClient.get("/users/profile");
     return response;
 }
+
+export const forgotPassword = (email) => {
+    return apiClient.post("/users/auth/forgot-password", {}, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: {
+            email: email
+        }
+    });
+}
+
+export const resetPassword = (token, newPassword) => {
+    return apiClient.patch("/users/auth/reset-password", {}, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: {
+            token: token,
+            newPassword: newPassword
+        }
+    })
+}

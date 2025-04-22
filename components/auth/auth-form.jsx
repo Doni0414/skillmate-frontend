@@ -8,8 +8,7 @@ import { CountrySelector } from "../common/country-selector";
 import { useState } from "react";
 import apiClient from "../api-client";
 import Router from "next/router";
-
-const firaSans = Fira_Sans({ subsets: ["latin"], weight: ["400"] });
+import { firaSans } from "../fonts";
 
 export function AuthForm({ type }) {
   const {
@@ -121,7 +120,8 @@ function SignInForm({
   handleDoNotHaveAccountClick,
   loginFieldErrors,
 }) {
-  const handleClickOnForgotPassword = () => {
+  const handleClickOnForgotPassword = (e) => {
+    e.preventDefault();
     Router.push("/forgot-password");
   };
 
