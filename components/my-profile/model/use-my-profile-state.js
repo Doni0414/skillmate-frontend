@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import apiClient from "../../api-client";
 import { validateAddSkillForm } from "./validate-add-skill-form";
 import { hasErrors } from "./has-errors";
-import { useEditSkillPopupState } from "./use-edit-skill-popup-state";
-import { fetchAchievements } from "../../common/achievements/model/fetch-achievements";
 import { fetchAchievementsFiles } from "../../common/achievements/model/fetch-achievement-files";
 import { downloadResource, editSkill, getSkillsByUserId } from "../../api";
 import { validateEditSkillForm } from "./validate-edit-skill-form";
@@ -333,6 +331,16 @@ export function useMyProfileState() {
         });
     }
 
+    const [isChangePasswordPopupOpen, setIsChangePasswordPopupOpen] = useState(false);
+
+    const handleClickOnChangePasswordButton = () => {
+        setIsChangePasswordPopupOpen(true);
+    }
+
+    const closeChangePasswordPopup = () => {
+        setIsChangePasswordPopupOpen(false);
+    }
+
     return {
         addSkillForm,
         addSkillFormErrors,
@@ -370,6 +378,9 @@ export function useMyProfileState() {
         addAchievementInputRefInEditPopup,
         handleClickOnSaveButtonInEditSkillPopup,
         skillOnEditErrors,
-        handleClickOnDeleteAchievementInEditSkillPopup
+        handleClickOnDeleteAchievementInEditSkillPopup,
+        isChangePasswordPopupOpen,
+        handleClickOnChangePasswordButton,
+        closeChangePasswordPopup
     }
 }

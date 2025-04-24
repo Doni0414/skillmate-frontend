@@ -8,6 +8,7 @@ export function MyProfileLayout({
   userInfoForm,
   skills,
   addSkillButton,
+  changePasswordButton,
 }) {
   return (
     <div
@@ -20,7 +21,11 @@ export function MyProfileLayout({
       <div className="w-[1200px] h-[94px] bg-[#3C5AA5]"></div>
       <div className="flex justify-between items-center mt-16 mx-[53px]">
         {userEmailContainer}
-        {editProfileButton}
+
+        <div className="flex items-center gap-6">
+          {changePasswordButton}
+          {editProfileButton}
+        </div>
       </div>
       {userInfoForm}
       <div className="mt-10 mx-8">

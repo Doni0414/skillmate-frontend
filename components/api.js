@@ -1,10 +1,52 @@
 import apiClient from "./api-client"
 import { RESOURCES_PREFIX } from "./my-profile/model/use-my-profile-state";
 
+export const getUserProfile = () => {
+    return apiClient.get("/users/profile");
+}
+
+export const getUserSkillsByUserId = (userId) => {
+    return apiClient.get("/skills", {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: {
+            userId
+        }
+    });
+}
+
+export const updateProfileImage = (formData) => {
+    return apiClient.patch("/users/profile/image", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    })
+}
+
+export const updateUserInfo = (newUserInfo) => {
+    return apiClient.put("/users/profile", {
+        newUserInfo
+    })
+}
+
+export const changePassword = (oldPassword, newPassword) => {
+    return apiClient.patch("/users/profile/change-password", {}, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: {
+            oldPassword,
+            newPassword
+        }
+    })
+}
+
 export const getResourceURLById = (resourceId) => {
     console.log(resourceId);
     return resourceId ? RESOURCES_PREFIX + resourceId : null;
 }
+
 export const getUserById = async (userId) => {
     const response = await apiClient.get("/users/profile/" + userId);
     return response;

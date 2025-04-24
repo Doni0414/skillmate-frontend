@@ -21,21 +21,11 @@ import { AddNewSkillButton } from "./ui/add-new-skill-button";
 import { SkillCard } from "./ui/skill-card";
 import { AddSkillPopup } from "./add-skill-popup";
 import { EditSkillPopup } from "./edit-skill-popup";
+import { ChangePasswordButton } from "./ui/change-password-button";
+import { ChangePasswordPopup } from "./change-password-popup/change-password-popup";
 
 export const PROFICIENCY_LEVELS = ["Beginner", "Intermediate", "Pro"];
 export const PROFICIENCY_LEVELS_VALUES = ["BEGINNER", "INTERMEDIATE", "PRO"];
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-poppins",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
-
-const firaSans = Fira_Sans({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
 
 export function MyProfile({ className }) {
   const {
@@ -74,6 +64,9 @@ export function MyProfile({ className }) {
     handleClickOnSaveButtonInEditSkillPopup,
     skillOnEditErrors,
     handleClickOnDeleteAchievementInEditSkillPopup,
+    isChangePasswordPopupOpen,
+    handleClickOnChangePasswordButton,
+    closeChangePasswordPopup,
   } = useMyProfileState();
   if (isLoading) {
     return <></>;
@@ -100,6 +93,9 @@ export function MyProfile({ className }) {
               />
             }
           />
+        }
+        changePasswordButton={
+          <ChangePasswordButton onClick={handleClickOnChangePasswordButton} />
         }
         editProfileButton={
           <EditProfileButton
@@ -181,6 +177,10 @@ export function MyProfile({ className }) {
         handleClickOnSave={handleClickOnSaveButtonInEditSkillPopup}
         errors={skillOnEditErrors}
         deleteAchievement={handleClickOnDeleteAchievementInEditSkillPopup}
+      />
+      <ChangePasswordPopup
+        isOpen={isChangePasswordPopupOpen}
+        onClose={closeChangePasswordPopup}
       />
     </>
   );
