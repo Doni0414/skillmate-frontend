@@ -22,6 +22,7 @@ export function AddSkillPopup({
   handleClickOnSaveButtonInAddSkillPopup,
   deleteAchievementInAddSkillPopup,
 }) {
+  
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <AddSkillPopupLayout

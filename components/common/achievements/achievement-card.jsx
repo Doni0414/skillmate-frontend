@@ -20,7 +20,7 @@ export function AchievementCard({ id, achievement }) {
         <div className="flex items-center gap-2">
           <div className="w-[3px] h-[3px] rounded-full bg-[#767676]"></div>
           <a
-            href={getResourceURLById(id)}
+            href={getResourceURLById(achievement.id)}
             className="text-[14px] text-[#005FAD]"
           >
             Download

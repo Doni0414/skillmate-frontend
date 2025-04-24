@@ -2,6 +2,7 @@ import apiClient from "./api-client"
 import { RESOURCES_PREFIX } from "./my-profile/model/use-my-profile-state";
 
 export const getResourceURLById = (resourceId) => {
+    console.log(resourceId);
     return resourceId ? RESOURCES_PREFIX + resourceId : null;
 }
 export const getUserById = async (userId) => {
@@ -71,6 +72,33 @@ export const resetPassword = (token, newPassword) => {
     })
 }
 
+export const editSkill = (userId, skillName, skillDescription, skillLevel, skillId, achievements) => {
+    const formData = new FormData();
+    achievements.forEach(achievement => formData.append("achievements", achievement));
+    return apiClient.put(`/skills/${skillId}`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+        params: {
+            userId,
+            name: skillName,
+            description: skillDescription,
+            level: skillLevel
+        }
+    })
+}
+
+export const getSkillsByUserId = (userId) => {
+    return apiClient.get("/skills", {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: {
+            userId
+        }
+    })
+}
+
 export const downloadResource = async (resourceId) => {
     try {
       // Fetch the file from the backend
@@ -82,10 +110,11 @@ export const downloadResource = async (resourceId) => {
 
       // Try extracting filename from Content-Disposition header
       const disposition = response.headers.get("Content-Disposition");
+      console.log(decodeURIComponent(disposition));
       let fileName = `resource_${resourceId}.bin`; // Default filename
 
       if (disposition && disposition.includes("filename=")) {
-        fileName = disposition.split("filename=")[1].replace(/['"]/g, "");
+        fileName = decodeURIComponent(disposition.split("filename=")[1]).replace(/['"]/g, "");
       }
 
       console.log("filename is " + fileName);

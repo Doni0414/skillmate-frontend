@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { downloadResource } from "../../../api";
-import { fetchAchievements } from "./fetch-achievements";
-import { fileToAchievement } from "./file-to-achievement";
+import { fetchAchievements } from "../../achievements/model/fetch-achievements";
+import { fileToAchievement } from "../../achievements/model/file-to-achievement";
 
 export function useViewSkillPopupState(skill) {
   const [downloadedAchievements, setDownloadedAchievements] = useState([]);

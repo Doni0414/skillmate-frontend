@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import apiClient from "../../api-client";
 import { validateAddSkillForm } from "./validate-add-skill-form";
 import { hasErrors } from "./has-errors";
+import { useEditSkillPopupState } from "./use-edit-skill-popup-state";
+import { fetchAchievements } from "../../common/achievements/model/fetch-achievements";
+import { fetchAchievementsFiles } from "../../common/achievements/model/fetch-achievement-files";
+import { downloadResource, editSkill, getSkillsByUserId } from "../../api";
+import { validateEditSkillForm } from "./validate-edit-skill-form";
 
 export const RESOURCES_PREFIX = "http://localhost:8080/api/resources/";
 
@@ -216,6 +221,7 @@ export function useMyProfileState() {
     }
 
     // view skill handler
+    const addAchievementInputRefInEditPopup = useRef(null);
     const [skillOnView, setSkillOnView] = useState();
     const handleClickOnViewSkillButton = (skill) => {
         setSkillOnView(skill);
@@ -227,8 +233,24 @@ export function useMyProfileState() {
 
     // edit skill handler
     const [skillOnEdit, setSkillOnEdit] = useState();
+    const [skillOnEditErrors, setSkillOnEditErrors] = useState({
+        skillNameError: "",
+        skillDescriptionError: ""
+    });
     const handleClickOnEditSkillButton = (skill) => {
-        setSkillOnEdit(skill);
+        fetchAchievementsFiles(downloadResource, skill.achievementIds, (files) => {
+            console.log(files);
+            setSkillOnEdit((lastSkillOnEdit) => {
+                return {
+                    ...skill,
+                    downloadedAchievementFiles: files,
+                    downloadedAchievements: files.map((file, index) => ({
+                        id: skill.achievementIds[index],
+                        ...fileToAchievement(file)
+                    }))
+                }
+            });
+        });
     }
 
     const closeEditSkill = () => {
@@ -242,29 +264,62 @@ export function useMyProfileState() {
         }));
     }
 
-    console.log(userInfo);
+    const handleClickOnAttachAchievementInEditSkillPopup = (e) => {
+        e.preventDefault();
+        addAchievementInputRefInEditPopup.current.click();
+    }
 
-    async function downloadResource(resourceId) {
-        try {
-            // Fetch the file from the backend
-            const response = await fetch(`http://localhost:8080/api/resources/${resourceId}`);
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    
-            // Try extracting filename from Content-Disposition header
-            const disposition = response.headers.get("Content-Disposition");
-            let fileName = `resource_${resourceId}.bin`; // Default filename
-    
-            if (disposition && disposition.includes("filename=")) {
-                fileName = disposition.split("filename=")[1].replace(/['"]/g, "");
-            }
-    
-            const blob = await response.blob(); // Convert response to Blob
-            return new File([blob], fileName, { type: blob.type }); // Create a File object
-        } catch (error) {
-            console.error("Error downloading resource:", error);
-            return null;
+    const handleAddAchievementInputRefInEditPopupOnChange = (e) => {
+        const file = e.target.files[0];
+
+        if (file) {
+            setSkillOnEdit((lastSkillOnEdit) => ({
+                ...lastSkillOnEdit,
+                downloadedAchievementFiles: [...lastSkillOnEdit.downloadedAchievementFiles, file],
+                downloadedAchievements: [...lastSkillOnEdit.downloadedAchievements, fileToAchievement(file)]
+            }));
         }
-    }    
+    }
+
+    const handleClickOnDeleteAchievementInEditSkillPopup = (e, index) => {
+        e.preventDefault();
+        setSkillOnEdit((lastSkillOnEdit) => ({
+            ...lastSkillOnEdit,
+            downloadedAchievementFiles: lastSkillOnEdit.downloadedAchievementFiles.filter((file, i) => i !== index),
+            downloadedAchievements: lastSkillOnEdit.downloadedAchievements.filter((achievement, i) => i !== index),
+        }))
+    }
+
+    const handleClickOnSaveButtonInEditSkillPopup = (e) => {
+        e.preventDefault();
+        const errors = validateEditSkillForm(skillOnEdit);
+
+        if (hasErrors(errors)) {
+            setSkillOnEditErrors(errors);
+            return;
+        }
+        editSkill(userInfo.id, skillOnEdit.name, skillOnEdit.description, skillOnEdit.level, skillOnEdit.id, skillOnEdit.downloadedAchievementFiles)
+        .then(response => {
+
+            setSuccessMessage("Skill has been edited successfully!");
+            setShowSuccessMessage(true);
+
+            setTimeout(() => {
+                setShowSuccessMessage(false);
+                setShowSuccessMessage(null);
+            }, 3_000);
+
+            return getSkillsByUserId(userInfo.id)
+            .then(response => {
+                setUserInfo((lastUserInfo) => ({
+                    ...lastUserInfo,
+                    skills: response.data
+                }))
+            })
+        }).catch(error => {
+            console.log(error);
+        });
+    }
 
     const handleClickOnDeleteSkillButton = (skillId) => {
         apiClient.delete("/skills/" + skillId)
@@ -309,6 +364,12 @@ export function useMyProfileState() {
         handleClickOnEditSkillButton,
         handleSkillOnEditFieldChange,
         closeEditSkill,
-        handleClickOnDeleteSkillButton
+        handleClickOnDeleteSkillButton,
+        handleAddAchievementInputRefInEditPopupOnChange,
+        handleClickOnAttachAchievementInEditSkillPopup,
+        addAchievementInputRefInEditPopup,
+        handleClickOnSaveButtonInEditSkillPopup,
+        skillOnEditErrors,
+        handleClickOnDeleteAchievementInEditSkillPopup
     }
 }

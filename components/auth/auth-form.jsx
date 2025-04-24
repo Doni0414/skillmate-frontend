@@ -1,12 +1,8 @@
 import { clsx } from "clsx";
-import { Fira_Sans } from "next/font/google";
 import { useFormState } from "./use-form-state";
 import { Modal } from "../common/modal";
 import { FieldErrorMessage } from "../common/field-error-message";
-import { Select } from "../common/select";
 import { CountrySelector } from "../common/country-selector";
-import { useState } from "react";
-import apiClient from "../api-client";
 import Router from "next/router";
 import { firaSans } from "../fonts";
 
