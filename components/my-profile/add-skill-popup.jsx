@@ -1,12 +1,10 @@
-import { AchievementsList } from "../common/achievements/achievements-list";
 import { DeletableAchievementCard } from "../common/achievements/deletable-achievement-card";
-import { FormTextArea } from "../common/form-text-area";
-import { FormField } from "../common/FormField";
 import { HiddenFileInput } from "../common/hidden-file-input";
 import { Modal } from "../common/modal";
-import { Select } from "../common/select";
+import { useSuggestedSkillsState } from "./model/use-suggested-skills-state";
 import { AddSkillPopupLayout } from "./ui/add-skill-popup-layout";
 import { ProficiencyLevelSelect } from "./ui/proficiency-level-selector";
+import { SuggestedSkill } from "./ui/suggested-skill";
 
 export function AddSkillPopup({
   isOpen,
@@ -21,15 +19,27 @@ export function AddSkillPopup({
   handleAddAchievementInputRefOnChange,
   handleClickOnSaveButtonInAddSkillPopup,
   deleteAchievementInAddSkillPopup,
+  setSkillName,
 }) {
-  
+  const {
+    suggestedSkills,
+    isSuggestedSkillsOpen,
+    onSearchFocus,
+    onSearchUnFocus,
+    handleClickOnSuggestedSkill,
+    onSearchChange,
+  } = useSuggestedSkillsState(addSkillForm.name, setSkillName);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <AddSkillPopupLayout
+        onSearchFocus={onSearchFocus}
+        onSearchUnFocus={onSearchUnFocus}
         skillName={addSkillForm.name}
-        handleSkillNameChange={(e) =>
-          handleChangeOfAddSkillForm("name", e.target.value)
-        }
+        handleSkillNameChange={(e) => {
+          handleChangeOfAddSkillForm("name", e.target.value);
+          onSearchChange();
+        }}
         skillNameErrorText={addSkillFormErrors.skillNameError}
         skillDescription={addSkillForm.description}
         handleDescriptionChange={(e) => {
@@ -63,6 +73,16 @@ export function AddSkillPopup({
             index={index}
           />
         ))}
+        suggestedSkills={
+          isSuggestedSkillsOpen &&
+          suggestedSkills.map((skill, index) => (
+            <SuggestedSkill
+              key={index}
+              skillName={skill.name}
+              onClick={handleClickOnSuggestedSkill}
+            />
+          ))
+        }
       />
     </Modal>
   );

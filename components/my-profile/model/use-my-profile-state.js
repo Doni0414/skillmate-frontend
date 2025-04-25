@@ -156,14 +156,14 @@ export function useMyProfileState() {
                     skills: lastUserInfo.skills.slice()
                 }
             })
-            setAddSkillForm({
-                name: "",
-                description: "",
-                level: "BEGINNER",
-                achievements: []
-            });
-            setAchievementFiles([]);
-            closeAddSkillPopup();
+            setShowSuccessMessage(true);
+            setSuccessMessage("Skill has been created!");
+
+            setTimeout(() => {
+                setShowSuccessMessage(false);
+                setSuccessMessage(null);
+                closeAddSkillPopup();
+            }, 2_000);
         }).catch(error => {
             console.log(error);
             setAddSkillFormErrors(error.response.data);
@@ -215,6 +215,14 @@ export function useMyProfileState() {
     }
  
     const closeAddSkillPopup = () => {
+        setAddSkillFormErrors({});
+        setAddSkillForm({
+            name: "",
+            description: "",
+            level: "BEGINNER",
+            achievements: []
+        });
+        setAchievementFiles([]);
         setIsAddSkillPopupOpen(false);
     }
 
@@ -253,6 +261,10 @@ export function useMyProfileState() {
 
     const closeEditSkill = () => {
         setSkillOnEdit(null);
+        setSkillOnEditErrors({
+            skillNameError: "",
+            skillDescriptionError: ""
+        });
     }
 
     const handleSkillOnEditFieldChange = (field, value) => {
@@ -305,6 +317,7 @@ export function useMyProfileState() {
             setTimeout(() => {
                 setShowSuccessMessage(false);
                 setShowSuccessMessage(null);
+                closeEditSkill();
             }, 3_000);
 
             return getSkillsByUserId(userInfo.id)
@@ -339,6 +352,22 @@ export function useMyProfileState() {
 
     const closeChangePasswordPopup = () => {
         setIsChangePasswordPopupOpen(false);
+    }
+
+    const setSkillNameInAddSkillPopup = (skillName) => {
+        console.log(skillName);
+        setAddSkillForm((lastAddSkillForm) => ({
+            ...lastAddSkillForm,
+            name: skillName
+        }));
+    }
+
+    const setSkillNameInEditSkillPopup = (skillName) => {
+        console.log(skillName);
+        setSkillOnEdit((lastSkillOnEdit) => ({
+            ...lastSkillOnEdit,
+            name: skillName
+        }));
     }
 
     return {
@@ -381,6 +410,8 @@ export function useMyProfileState() {
         handleClickOnDeleteAchievementInEditSkillPopup,
         isChangePasswordPopupOpen,
         handleClickOnChangePasswordButton,
-        closeChangePasswordPopup
+        closeChangePasswordPopup,
+        setSkillNameInAddSkillPopup,
+        setSkillNameInEditSkillPopup
     }
 }

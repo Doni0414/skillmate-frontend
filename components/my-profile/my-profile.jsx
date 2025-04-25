@@ -67,6 +67,8 @@ export function MyProfile({ className }) {
     isChangePasswordPopupOpen,
     handleClickOnChangePasswordButton,
     closeChangePasswordPopup,
+    setSkillNameInAddSkillPopup,
+    setSkillNameInEditSkillPopup,
   } = useMyProfileState();
   if (isLoading) {
     return <></>;
@@ -136,6 +138,7 @@ export function MyProfile({ className }) {
         successMessage={successMessage}
       />
       <AddSkillPopup
+        setSkillName={setSkillNameInAddSkillPopup}
         isOpen={isAddSkillPopupOpen}
         onClose={closeAddSkillPopup}
         addSkillForm={addSkillForm}
@@ -160,24 +163,27 @@ export function MyProfile({ className }) {
         isOpen={skillOnView}
         onClose={closeViewSkill}
       />
-      <EditSkillPopup
-        isOpen={skillOnEdit}
-        skill={skillOnEdit}
-        onClose={closeEditSkill}
-        proficiencyLevels={PROFICIENCY_LEVELS}
-        proficiencyLevelValues={PROFICIENCY_LEVELS_VALUES}
-        handleSkillOnEditFieldChange={handleSkillOnEditFieldChange}
-        handleClickOnAttachAchievement={
-          handleClickOnAttachAchievementInEditSkillPopup
-        }
-        addAchievementInputRef={addAchievementInputRefInEditPopup}
-        handleAddAchievementInputRefOnChange={
-          handleAddAchievementInputRefInEditPopupOnChange
-        }
-        handleClickOnSave={handleClickOnSaveButtonInEditSkillPopup}
-        errors={skillOnEditErrors}
-        deleteAchievement={handleClickOnDeleteAchievementInEditSkillPopup}
-      />
+      {skillOnEdit && (
+        <EditSkillPopup
+          isOpen={skillOnEdit}
+          skill={skillOnEdit}
+          onClose={closeEditSkill}
+          proficiencyLevels={PROFICIENCY_LEVELS}
+          proficiencyLevelValues={PROFICIENCY_LEVELS_VALUES}
+          handleSkillOnEditFieldChange={handleSkillOnEditFieldChange}
+          handleClickOnAttachAchievement={
+            handleClickOnAttachAchievementInEditSkillPopup
+          }
+          addAchievementInputRef={addAchievementInputRefInEditPopup}
+          handleAddAchievementInputRefOnChange={
+            handleAddAchievementInputRefInEditPopupOnChange
+          }
+          handleClickOnSave={handleClickOnSaveButtonInEditSkillPopup}
+          errors={skillOnEditErrors}
+          deleteAchievement={handleClickOnDeleteAchievementInEditSkillPopup}
+          setSkillName={setSkillNameInEditSkillPopup}
+        />
+      )}
       <ChangePasswordPopup
         isOpen={isChangePasswordPopupOpen}
         onClose={closeChangePasswordPopup}

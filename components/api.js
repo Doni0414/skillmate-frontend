@@ -1,3 +1,4 @@
+import axios from "axios";
 import apiClient from "./api-client"
 import { RESOURCES_PREFIX } from "./my-profile/model/use-my-profile-state";
 
@@ -139,6 +140,12 @@ export const getSkillsByUserId = (userId) => {
             userId
         }
     })
+}
+
+export const searchSkills = (params) => {
+    return axios.get("/api/search-skills", {
+        params
+    });
 }
 
 export const downloadResource = async (resourceId) => {

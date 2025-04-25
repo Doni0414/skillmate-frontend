@@ -5,6 +5,8 @@ import { AchievementsList } from "../../common/achievements/achievements-list";
 import { FieldErrorMessage } from "../../common/field-error-message";
 
 export function AddSkillPopupLayout({
+  onSearchFocus,
+  onSearchUnFocus,
   skillName,
   handleSkillNameChange,
   skillNameErrorText,
@@ -16,6 +18,7 @@ export function AddSkillPopupLayout({
   handleClickOnAttachAchievementsButtonInAddSkillForm,
   hiddenAchievementInput,
   handleClickOnSaveButtonInAddSkillPopup,
+  suggestedSkills,
 }) {
   return (
     <form className="pl-10 pr-16 py-12 border border-[#FFC107] bg-white rounded-[20px]">
@@ -29,15 +32,22 @@ export function AddSkillPopupLayout({
       </div>
       <div className="mb-[53px]">
         <input
+          onFocus={onSearchFocus}
+          onBlur={onSearchUnFocus}
           className="w-[609px] pl-[12px] py-[17px] bg-[#F9F9F9] text-black/70 text-[15px] border border-black/10 rounded-[7px] focus:outline-none"
           placeholder="Skill name"
           value={skillName}
           type="text"
           onChange={handleSkillNameChange}
         />
-        {skillNameErrorText && (
-          <FieldErrorMessage className="mt-1" text={skillNameErrorText} />
-        )}
+        <div className="relative">
+          {skillNameErrorText && (
+            <FieldErrorMessage className="mt-1" text={skillNameErrorText} />
+          )}
+          <div className="absolute top-0 bg-[#F9F9F9] border border-black/10 border-t-transparent rounded-b-2xl">
+            {suggestedSkills}
+          </div>
+        </div>
       </div>
       <div className="mb-[53px]">
         <textarea

@@ -6,6 +6,9 @@ import { UploadIcon } from "../../common/icons/upload-icon";
 import { FieldErrorMessage } from "../../common/field-error-message";
 
 export function EditSkillPopupLayout({
+  suggestedSkills,
+  onSearchFocus,
+  onSearchUnFocus,
   skillName,
   skillNameErrorText,
   skillDescription,
@@ -32,15 +35,22 @@ export function EditSkillPopupLayout({
       </div>
       <div className="mb-[53px]">
         <input
+          onFocus={onSearchFocus}
+          onBlur={onSearchUnFocus}
           className="w-[609px] pl-[12px] py-[17px] bg-[#F9F9F9] text-black/70 text-[15px] border border-black/10 rounded-[7px] focus:outline-none"
           placeholder="Skill name"
           value={skillName}
           type="text"
           onChange={handleSkillNameChange}
         />
-        {skillNameErrorText && (
-          <FieldErrorMessage className="mt-1" text={skillNameErrorText} />
-        )}
+        <div className="relative">
+          {skillNameErrorText && (
+            <FieldErrorMessage className="mt-1" text={skillNameErrorText} />
+          )}
+          <div className="absolute top-0 bg-[#F9F9F9] border border-black/10 border-t-transparent rounded-b-2xl">
+            {suggestedSkills}
+          </div>
+        </div>
       </div>
       <div className="mb-[53px]">
         <textarea
