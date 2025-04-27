@@ -3,7 +3,7 @@ import Router, { useRouter } from "next/router";
 import { defaultProps } from "react-select/base";
 
 const apiClient = axios.create({
-    baseURL: "http://143.110.228.112/api",
+    baseURL: "http://143.110.228.112:8080/api",
     withCredentials: true
 })
 
