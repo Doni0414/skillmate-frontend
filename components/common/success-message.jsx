@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { createPortal } from "react-dom";
+import {useEffect, useState} from "react";
 
 export function SuccessMessage({ showMessage, successMessage }) {
   const element = (
@@ -12,5 +13,8 @@ export function SuccessMessage({ showMessage, successMessage }) {
       {successMessage}
     </div>
   );
+  if (!showMessage) {
+    return <></>;
+  }
   return createPortal(element, document.getElementById("messages"));
 }

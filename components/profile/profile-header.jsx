@@ -3,10 +3,10 @@ import Image from "next/image";
 import { GoBackIcon } from "./icon/go-back-icon";
 import { useEffect, useState } from "react";
 import { Modal } from "../common/modal";
-import { ViewSkillPopup } from "../common/view-skill-popup";
 import { StarsContainer } from "../common/stars-container";
 import apiClient from "../api-client";
-import { RESOURCES_PREFIX } from "../my-profile/model/use-my-profile-state";
+import {ViewSkillPopup} from "../common/view-skill-popup/view-skill-popup";
+import {getResourceURLById} from "../api";
 
 export function ProfileHeader({ user, className, reviews }) {
   return (
@@ -15,7 +15,7 @@ export function ProfileHeader({ user, className, reviews }) {
         <Image
           width={100}
           height={100}
-          src={RESOURCES_PREFIX + user.imageResourceId}
+          src={getResourceURLById(user.imageResourceId)}
           alt="ava"
           className="w-[100px] h-[100px] rounded-full"
         />

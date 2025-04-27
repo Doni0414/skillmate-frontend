@@ -4,11 +4,11 @@ import { inter } from "./search-page-content";
 import { Fira_Sans, Roboto } from "next/font/google";
 import { Modal } from "../common/modal";
 import { useEffect, useState } from "react";
-import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
 import apiClient from "../api-client";
 import { SuccessMessage } from "../common/success-message";
 import { FailureMessage } from "../common/failure-message";
 import { FormTextArea } from "../common/form-text-area";
+import {getResourceURLById} from "../api";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -39,7 +39,7 @@ export function AdsContainer({ className, ads }) {
             userId={ad.userId}
             level={ad.level}
             description={ad.description}
-            adImageSrc={RESOURCES_PREFIX + ad.imageResourceId}
+            adImageSrc={getResourceURLById(ad.imageResourceId)}
           />
         ))}
       </div>
@@ -108,7 +108,7 @@ function AdContainer({
           </div>
           <div className="flex items-center gap-x-[10px]">
             <Image
-              src={RESOURCES_PREFIX + user.imageResourceId}
+              src={getResourceURLById(user.imageResourceId)}
               width={30}
               height={30}
               className="w-[30px] h-[30px] rounded-full"
@@ -175,7 +175,7 @@ function AdPopup({ adId, skillName, user, level, description, adImageSrc }) {
       <div className="px-10">
         <div className="flex items-center gap-[10px]">
           <Image
-            src={RESOURCES_PREFIX + user.imageResourceId}
+            src={getResourceURLById(user.imageResourceId)}
             width={40}
             height={40}
             className="w-10 h-10 rounded-full"

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import {UserAccountIcon} from "../../common/icons/user-account-icon";
 
 export function UserProfileImage({ imageResourceURL }) {
   return imageResourceURL ? (

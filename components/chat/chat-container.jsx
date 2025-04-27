@@ -3,7 +3,7 @@ import { Roboto } from "next/font/google";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import apiClient from "../api-client";
-import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
+import {getResourceURLById} from "../api";
 
 function computeClassNameOfChatHeader(chat) {
   return "";
@@ -46,7 +46,7 @@ export function ChatContainer({ chat, isActive, onClick, currentUserId }) {
         width={56}
         height={66}
         className="w-[56px] h-[66px] rounded-full"
-        src={RESOURCES_PREFIX + otherUser.imageResourceId}
+        src={getResourceURLById(otherUser.imageResourceId)}
         alt="ava"
       />
       <ChatUserContainer

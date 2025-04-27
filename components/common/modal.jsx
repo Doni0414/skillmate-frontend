@@ -16,5 +16,8 @@ export function Modal({ isOpen, onClose, children }) {
       </div>
     </div>
   );
+  if (!document) {
+    return <></>;
+  }
   return createPortal(modal, document.getElementById("modals"));
 }

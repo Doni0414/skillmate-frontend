@@ -5,8 +5,8 @@ import { inter, MessageContainer, MessageUiKit } from "./message";
 import { SendMessageIcon } from "./icon/send-message-icon";
 import { useEffect, useState } from "react";
 import apiClient from "../api-client";
-import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
 import { otherUserId } from "./chat-container";
+import {getResourceURLById} from "../api";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -79,7 +79,7 @@ function ChatHeader({ chat, chatId, currentUserId }) {
       {chatIsChoosen(chat) && (
         <div className="flex gap-5 items-center">
           <Image
-            src={RESOURCES_PREFIX + otherUser.imageResourceId}
+            src={getResourceURLById(otherUser.imageResourceId)}
             width={56}
             height={56}
             className="w-14 h-14 rounded-full"

@@ -11,9 +11,9 @@ import { FormTextArea } from "../common/form-text-area";
 import Image from "next/image";
 import { EmptyStarIcon } from "../profile/icon/empty-star";
 import apiClient from "../api-client";
-import { RESOURCES_PREFIX } from "../my-profile/model/use-my-profile-state";
 import { SuccessMessage } from "../common/success-message";
 import { FailureMessage } from "../common/failure-message";
+import {getResourceURLById} from "../api";
 
 const firaSans = Fira_Sans({
   subsets: ["latin"],
@@ -296,7 +296,7 @@ function Review({ review }) {
       <div className="mb-3 w-[366px] flex items-center justify-between">
         <div className="flex items-center gap-[18px]">
           <Image
-            src={RESOURCES_PREFIX + author.imageResourceId}
+            src={getResourceURLById(author.imageResourceId)}
             width={40}
             height={40}
             className="w-10 h-10 rounded-full"

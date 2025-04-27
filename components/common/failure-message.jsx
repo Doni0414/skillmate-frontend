@@ -12,5 +12,8 @@ export function FailureMessage({ showMessage, failureMessage }) {
       {failureMessage}
     </div>
   );
+  if (!showMessage) {
+    return <></>;
+  }
   return createPortal(element, document.getElementById("messages"));
 }

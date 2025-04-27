@@ -4,7 +4,7 @@ import Image from "next/image";
 import { computeDateString } from "./chat-container";
 import { useEffect, useState } from "react";
 import apiClient from "../api-client";
-import { RESOURCES_PREFIX } from "../my-profile/use-my-profile-state";
+import {getResourceURLById} from "../api";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -86,7 +86,7 @@ function ProfileContainer({ profileType, userId, className }) {
       <Image
         width={48}
         height={48}
-        src={RESOURCES_PREFIX + user.imageResourceId}
+        src={getResourceURLById(user.imageResourceId)}
         alt="profile"
         className="w-12 h-12 rounded-full"
       />
