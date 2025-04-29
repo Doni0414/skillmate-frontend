@@ -1,6 +1,7 @@
 import axios from "axios";
 import apiClient from "./api-client"
 import { RESOURCES_PREFIX } from "./my-profile/model/use-my-profile-state";
+import api from "js-cookie";
 
 export const getUserProfile = () => {
     return apiClient.get("/users/profile");
@@ -80,7 +81,7 @@ export const getCommentsByPostId = async (postId) => {
 
 export const getCommentsCountByPostId = async (postId) => {
     const comments = await getCommentsByPostId(postId)
-    return comments.length;
+    return comments.content.length;
 }
 
 export const logout = async (postId) => {
@@ -146,6 +147,15 @@ export const searchSkills = (params) => {
     return axios.get("/api/search-skills", {
         params
     });
+}
+
+export const getCommentsByPublicationId = (publicationId, page, pageSize) => {
+    return apiClient.get(`/posts/${publicationId}/comments`, {
+        params: {
+            page,
+            size: pageSize
+        }
+    })
 }
 
 export const downloadResource = async (resourceId) => {

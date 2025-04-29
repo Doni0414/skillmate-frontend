@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  getCommentsByPostId,
+  getCommentsByPostId, getCommentsByPublicationId,
   getCommentsCountByPostId,
   getLikesCountByPostId,
   getResourceURLById,
@@ -29,45 +29,34 @@ export function Publications({ publications, user }) {
 }
 
 function Publication({ publication, user }) {
+  const COMMENTS_PER_PAGE = 3;
   const [author, setAuthor] = useState({});
-  const [allComments, setAllComments] = useState([]);
   const [comments, setComments] = useState([]);
   const [commentsPage, setCommentsPage] = useState(1);
   const publicationRef = useRef(null);
 
+  console.log("current page: " + commentsPage)
+
   useEffect(() => {
     fetchData();
     const interval = setInterval(() => {
-      fetchAllCommentsInInterval();
-      return () => {
-        clearInterval(interval);
-      };
+      getCommentsByPublicationId(publication.id, commentsPage, COMMENTS_PER_PAGE)
+          .then(response => {
+            if (response.data.content.length > 0) {
+              setComments(response.data.content);
+            }
+          });
     }, 3_000);
-  }, []);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [commentsPage]);
 
-  const fetchAllCommentsInInterval = async () => {
-    const fetchedComments = await getCommentsByPostId(publication.id);
-    setAllComments(fetchedComments);
-
-    console.log("fetching comments for " + publication.id);
-
-    setComments(fetchedComments.slice(0, commentsPage * COMMENTS_PER_PAGE));
-  };
-
-  const COMMENTS_PER_PAGE = 10;
   const fetchData = async () => {
     const fetchedAuthor = await getUserById(publication.creatorId);
     setAuthor(fetchedAuthor.data);
-
-    const fetchedComments = await getCommentsByPostId(publication.id);
-    setAllComments(fetchedComments);
-
-    setComments(fetchedComments.slice(0, COMMENTS_PER_PAGE));
   };
 
-  const loadAllCommentsTillPage = (page) => {
-    setComments(allComments.slice(0, page * COMMENTS_PER_PAGE));
-  };
 
   return (
     <div
@@ -103,16 +92,14 @@ function Publication({ publication, user }) {
       <CommentsMoreButton
         page={commentsPage}
         setPage={setCommentsPage}
-        loadAllCommentsTillPage={loadAllCommentsTillPage}
       />
     </div>
   );
 }
 
-function CommentsMoreButton({ className, loadAllCommentsTillPage }) {
+function CommentsMoreButton({ className, setPage }) {
   const onClick = () => {
     setPage((lastPage) => {
-      loadAllCommentsTillPage(lastPage + 1);
       return lastPage + 1;
     });
   };
