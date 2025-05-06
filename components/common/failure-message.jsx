@@ -1,7 +1,16 @@
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export function FailureMessage({ showMessage, failureMessage }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <></>;
+  }
   const element = (
     <div
       className={clsx(
@@ -12,8 +21,5 @@ export function FailureMessage({ showMessage, failureMessage }) {
       {failureMessage}
     </div>
   );
-  if (!showMessage) {
-    return <></>;
-  }
   return createPortal(element, document.getElementById("messages"));
 }

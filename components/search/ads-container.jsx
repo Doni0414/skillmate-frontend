@@ -8,7 +8,7 @@ import apiClient from "../api-client";
 import { SuccessMessage } from "../common/success-message";
 import { FailureMessage } from "../common/failure-message";
 import { FormTextArea } from "../common/form-text-area";
-import {getResourceURLById} from "../api";
+import { getResourceURLById } from "../api";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -97,7 +97,7 @@ function AdContainer({
         />
       </Modal>
       <div className="flex w-[400px] justify-between items-end mb-2">
-        <div>
+        <div className="max-w-[220px]">
           <div
             className={clsx(
               inter.className,
@@ -209,8 +209,6 @@ function ProposeExchangePopup({ adId, closeProposeExchangePopup }) {
     setProposeMessage(newValue);
   };
 
-  console.log(proposeMessage);
-
   const handleClickSendExchangeButton = (e) => {
     apiClient
       .post("/ads/exchange-requests", {
@@ -237,6 +235,16 @@ function ProposeExchangePopup({ adId, closeProposeExchangePopup }) {
           setFailureMessage(
             "You have already sent exchange request to this ad!",
           );
+
+          setTimeout(() => {
+            setFailureMessage(null);
+          }, 3000);
+        } else if (
+          error.response.data.errorMessage.includes(
+            "can't request exchange for own ad with id",
+          )
+        ) {
+          setFailureMessage("You can't request exchange for own ad");
 
           setTimeout(() => {
             setFailureMessage(null);

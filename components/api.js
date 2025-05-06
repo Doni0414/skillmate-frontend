@@ -158,6 +158,36 @@ export const getCommentsByPublicationId = (publicationId, page, pageSize) => {
     })
 }
 
+export const createAd = (userId, skillName, skillDescription, image) => {
+    const imageFormData = new FormData();
+    imageFormData.append("imageResource", image);
+    return apiClient.post(
+        `/ads?userId=${userId}&skillName=${skillName}&description=${skillDescription}`,
+        imageFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      )
+}
+
+export const searchAds = (searchValue, countries, cities, levels, page, pageSize) => {
+    return apiClient.get("/ads", {
+        params: {
+            searchValue,
+            countries,
+            cities,
+            levels,
+            page,
+            size: pageSize
+        },
+        paramsSerializer: {
+            indexes: null
+        }
+    })
+}
+
 export const downloadResource = async (resourceId) => {
     try {
       // Fetch the file from the backend

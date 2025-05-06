@@ -7,6 +7,8 @@ import apiClient from "../api-client";
 import { Select } from "../common/select";
 import { UploadIcon } from "../common/icons/upload-icon";
 import { SuccessMessage } from "../common/success-message";
+import { useCreateAdState } from "./model/use-create-ad-state";
+import { FailureMessage } from "../common/failure-message";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,89 +23,20 @@ const firaSans = Fira_Sans({
 });
 
 export function CreateAdPopup({ user, closePopup }) {
-  const [formData, setFormData] = useState({
-    skillName: "",
-    description: "",
-  });
-  const [adImage, setAdImage] = useState(null);
-
-  const handleOnSkillNameSelect = (value) => {
-    setFormData((lastFormData) => ({
-      ...lastFormData,
-      skillName: value,
-    }));
-  };
-
-  const handleDescriptionInput = (value) => {
-    setFormData((lastFormData) => ({
-      ...lastFormData,
-      description: value,
-    }));
-  };
-  const [skills, setSkills] = useState([]);
-
-  const skillsValues = skills.map((skill) => skill.name);
-
-  const imageInputRef = useRef(null);
-  const handleUploadImageClick = (e) => {
-    e.preventDefault();
-    imageInputRef.current.click();
-  };
-
-  const handleImageInputRefOnChange = (e) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      setAdImage(file);
-    }
-  };
-
-  const [successMessage, setSuccessMessage] = useState(null);
-
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-    const imageFormData = new FormData();
-    imageFormData.append("imageResource", adImage);
-    apiClient
-      .post(
-        `/ads?userId=${user.id}&skillName=${formData.skillName}&description=${formData.description}`,
-        imageFormData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      )
-      .then((response) => {
-        setSuccessMessage("Ad was successfully created!");
-        setTimeout(() => {
-          setSuccessMessage(null);
-        }, 3000);
-        closePopup();
-      })
-      .catch((error) => {
-        console.log("Error while creating ad", error);
-      });
-  };
-
-  useEffect(() => {
-    apiClient
-      .get(`/skills?userId=${user.id}`)
-      .then((response) => {
-        setSkills(response.data);
-        setFormData((lastFormData) => ({
-          ...lastFormData,
-          skillName: response.data[0].name,
-        }));
-      })
-      .catch((error) => {
-        console.log(
-          "Error while obtaining skills list in CreateAdPopup",
-          error,
-        );
-      });
-  }, []);
-
+  const {
+    formData,
+    formErrors,
+    handleOnSubmit,
+    successMessage,
+    skillsValues,
+    handleOnSkillNameSelect,
+    handleDescriptionInput,
+    handleUploadImageClick,
+    imageInputRef,
+    handleImageInputRefOnChange,
+    failureMessage,
+    isFailureMessageVisible,
+  } = useCreateAdState(user, closePopup);
   return (
     <form
       onSubmit={handleOnSubmit}
@@ -112,12 +45,18 @@ export function CreateAdPopup({ user, closePopup }) {
         firaSans.className,
       )}
     >
-      {successMessage && (
+      {
         <SuccessMessage
           showMessage={successMessage}
           successMessage={successMessage}
         />
-      )}
+      }
+      {
+        <FailureMessage
+          failureMessage={failureMessage}
+          showMessage={isFailureMessageVisible}
+        />
+      }
       <div className="mb-10 w-fit mx-auto text-black/70 text-[26px] font-semibold leading-[24px]">
         Create ad
       </div>
@@ -131,7 +70,9 @@ export function CreateAdPopup({ user, closePopup }) {
         value={formData.description}
         onChange={handleDescriptionInput}
         placeholder="Description"
-        className="block mb-10 w-[609px] h-[130px] pl-[12px] pt-[17px] bg-[#F9F9F9] text-black/70 text-[15px] border border-black/10 rounded-[7px] focus:outline-none resize-none"
+        className="block w-[609px] h-[130px] pl-[12px] pt-[17px] bg-[#F9F9F9] text-black/70 text-[15px] border border-black/10 rounded-[7px] focus:outline-none resize-none"
+        outerContainerClassName="mb-10"
+        errorText={formErrors.skillDescriptionError}
       />
       <button
         onClick={handleUploadImageClick}

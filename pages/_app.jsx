@@ -5,8 +5,8 @@ export default function App({ Component, pageProps }) {
   return (
     <div>
       <Component {...pageProps} />
-      <div id="messages" className="absolute z-50"></div>
-      <div id="modals" className="z-10"></div>
+      {/* <div id="messages" className="z-50"></div>
+      <div id="modals" className="z-10"></div> */}
     </div>
   );
 }
