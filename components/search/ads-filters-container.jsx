@@ -5,7 +5,7 @@ import { LevelIcon } from "./icons/level-icon";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export function FiltersContainer({
+export function AdsFiltersContainer({
   className,
   selectedCountries,
   setSelectedCountries,

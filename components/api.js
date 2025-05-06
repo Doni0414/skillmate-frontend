@@ -188,6 +188,16 @@ export const searchAds = (searchValue, countries, cities, levels, page, pageSize
     })
 }
 
+export const searchUsers = (searchValue, page, pageSize) => {
+    return apiClient.get("/users/search", {
+        params: {
+            name: searchValue,
+            page,
+            size: pageSize
+        }
+    })
+}
+
 export const downloadResource = async (resourceId) => {
     try {
       // Fetch the file from the backend

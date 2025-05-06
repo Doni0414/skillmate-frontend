@@ -1,12 +1,15 @@
 import clsx from "clsx";
 import { ToggleButtonContainer } from "./toggle-button-container";
-import { useEffect, useRef, useState } from "react";
 import { Fira_Sans, Inter } from "next/font/google";
 import { SearchIcon } from "./icons/search-icon";
-import { FiltersContainer } from "./filters-container";
+import { AdsFiltersContainer } from "./ads-filters-container";
 import { AdsContainer } from "./ads-container";
-import apiClient from "../api-client";
-import { searchAds } from "../api";
+import { useSearchPageContentState } from "./model/use-search-page-content-state";
+import { UserCard } from "./user-card";
+import Image from "next/image";
+import { getResourceURLById } from "../api";
+import { ViewProfileButton } from "./view-profile-button";
+import { SkillCard } from "./skill-card";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -19,64 +22,23 @@ const firaSans = Fira_Sans({
 });
 
 export function SearchPageContent({ className }) {
-  const page = 1;
-  const size = 10000;
-  const [adsActive, setAdsActive] = useState(true);
-  const handleOnAdsClick = () => {
-    setAdsActive(true);
-  };
-  const handleOnUsersClick = () => {
-    setAdsActive(false);
-  };
-
-  const [ads, setAds] = useState([]);
-  const [selectedCountries, setSelectedCountries] = useState([]);
-  const [selectedCities, setSelectedCities] = useState([]);
-  const [selectedLevels, setSelectedLevels] = useState([]);
-  const [searchInputValue, setSearchInputValue] = useState("");
-  const handleOnSearchInputChange = (event) => {
-    setSearchInputValue(event.target.value);
-  };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      searchAds(
-        searchInputValue,
-        selectedCountries,
-        selectedCities,
-        selectedLevels.map((level) => level.toUpperCase()),
-        page,
-        size,
-      )
-        .then((response) => {
-          setAds(response.data.content);
-        })
-        .catch((error) => {
-          console.log("Error while searching ads", error);
-        });
-    }, 500);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [selectedCountries, selectedCities, selectedLevels]);
-  const handleClickOnSearch = () => {
-    searchAds(
-      searchInputValue,
-      selectedCountries,
-      selectedCities,
-      selectedLevels.map((level) => level.toUpperCase()),
-      page,
-      size,
-    )
-      .then((response) => {
-        setAds(response.data.content);
-      })
-      .catch((error) => {
-        console.log("Error while searching ads", error);
-      });
-  };
-
+  const {
+    adsActive,
+    handleOnAdsClick,
+    handleOnUsersClick,
+    searchInputValue,
+    handleOnSearchInputChange,
+    handleClickOnSearch,
+    ads,
+    selectedCountries,
+    setSelectedCountries,
+    selectedLevels,
+    setSelectedLevels,
+    selectedCities,
+    setSelectedCities,
+    users,
+    handleClickOnUsersSearch,
+  } = useSearchPageContentState();
   return (
     <div className={clsx(className, "px-[110px]")}>
       <ToggleButtonContainer
@@ -84,22 +46,64 @@ export function SearchPageContent({ className }) {
         handleOnAdsClick={handleOnAdsClick}
         handleOnUsersClick={handleOnUsersClick}
       />
-      <SearchContainer
-        searchInputValue={searchInputValue}
-        handleOnSearchInputChange={handleOnSearchInputChange}
-        handleClickOnSearch={handleClickOnSearch}
-      />
-      <div className="flex gap-x-[114px]">
-        <FiltersContainer
-          className={inter.className}
-          selectedCountries={selectedCountries}
-          setSelectedCountries={setSelectedCountries}
-          selectedLevels={selectedLevels}
-          setSelectedLevels={setSelectedLevels}
-          selectedCities={selectedCities}
-          setSelectedCities={setSelectedCities}
+      {adsActive ? (
+        <SearchContainer
+          searchInputValue={searchInputValue}
+          handleOnSearchInputChange={handleOnSearchInputChange}
+          handleClickOnSearch={handleClickOnSearch}
         />
-        <AdsContainer ads={ads} className={firaSans.className} />
+      ) : (
+        <SearchContainer
+          searchInputValue={searchInputValue}
+          handleOnSearchInputChange={handleOnSearchInputChange}
+          handleClickOnSearch={handleClickOnUsersSearch}
+          placeholder="Search for users..."
+        />
+      )}
+      <div className="flex gap-x-[114px]">
+        {adsActive ? (
+          <AdsFiltersContainer
+            className={inter.className}
+            selectedCountries={selectedCountries}
+            setSelectedCountries={setSelectedCountries}
+            selectedLevels={selectedLevels}
+            setSelectedLevels={setSelectedLevels}
+            selectedCities={selectedCities}
+            setSelectedCities={setSelectedCities}
+          />
+        ) : (
+          <></>
+        )}
+        {adsActive ? (
+          <AdsContainer ads={ads} className={firaSans.className} />
+        ) : (
+          <div className="ml-[393px]">
+            <div className="mb-[38px] font-medium text-[19px]">
+              {users.length} results found
+            </div>
+            <div className="grid grid-cols-2 gap-x-[130px] gap-y-[140px]">
+              {users.map((user) => (
+                <UserCard
+                  ProfileImage={
+                    <Image
+                      alt="ava"
+                      src={getResourceURLById(user.imageResourceId)}
+                      width={50}
+                      height={50}
+                      className="w-[50px] h-[50px] rounded-full"
+                    />
+                  }
+                  fullName={user.fullName}
+                  viewProfileButton={<ViewProfileButton userId={user.id} />}
+                  skills={
+                    user.skills &&
+                    user.skills.map((skill) => <SkillCard skill={skill} />)
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -108,8 +112,8 @@ export function SearchPageContent({ className }) {
 function SearchContainer({
   searchInputValue,
   handleOnSearchInputChange,
-  searchBarInputRef,
   handleClickOnSearch,
+  placeholder = "What you want to learn?",
 }) {
   const handleOnKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -122,7 +126,7 @@ function SearchContainer({
         onKeyDown={handleOnKeyDown}
         value={searchInputValue}
         onChange={handleOnSearchInputChange}
-        placeholder="What you want to learn?"
+        placeholder={placeholder}
         className={clsx(
           "w-[693px] pl-[61px] py-4 rounded-[25px] bg-[#F0F0F0]/60 text-[22px] text-black/[57] shadow-md focus:outline-none",
           inter.className,
