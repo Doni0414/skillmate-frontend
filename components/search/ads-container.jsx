@@ -65,7 +65,7 @@ function AdContainer({
       .catch((error) => {
         console.log("Error while obtaining user by id in search page", error);
       });
-  }, []);
+  }, [userId]);
   const [isViewDetailsPopupOpen, setIsViewDetailsPopupOpen] = useState(false);
   const handleClickOnViewDetails = () => {
     setIsViewDetailsPopupOpen(true);
