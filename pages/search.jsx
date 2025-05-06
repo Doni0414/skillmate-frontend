@@ -12,4 +12,4 @@ function SearchPage() {
   );
 }
 
-export default withAuth(HomePage, apiClient);
+export default withAuth(SearchPage, apiClient);

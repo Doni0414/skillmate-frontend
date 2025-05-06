@@ -14,7 +14,7 @@ export function NavigationLinks({ setIsCreateAdPopupOpen }) {
         text="Share skill"
         handleClick={handleClickOnCreateAdButton}
       />
-      <NavigationLink link="/" text="Discover ad" />
+      <NavigationLink link="/search" text="Discover ad" />
     </NavigationLinksLayout>
   );
 }

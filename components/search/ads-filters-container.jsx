@@ -137,22 +137,26 @@ function FilterWithInput({
 
   const handleOnKeyDown = (e) => {
     if (e.key === "Enter") {
-      if (
-        inputValue &&
-        inputValue.trim() !== "" &&
-        !selectedValues.includes(inputValue)
-      ) {
-        const trimmedValue = inputValue.trim();
-        setSelectedValues((lastSelectedValues) => {
-          if (lastSelectedValues.includes(trimmedValue)) {
-            return lastSelectedValues;
-          }
-          return [...lastSelectedValues, trimmedValue];
-        });
-      }
-
-      setInputValue("");
+      addValueToSelectedValues();
     }
+  };
+
+  const addValueToSelectedValues = () => {
+    if (
+      inputValue &&
+      inputValue.trim() !== "" &&
+      !selectedValues.includes(inputValue)
+    ) {
+      const trimmedValue = inputValue.trim();
+      setSelectedValues((lastSelectedValues) => {
+        if (lastSelectedValues.includes(trimmedValue)) {
+          return lastSelectedValues;
+        }
+        return [...lastSelectedValues, trimmedValue];
+      });
+    }
+
+    setInputValue("");
   };
   return (
     <div className="text-black/80 text-[22px]">
@@ -171,7 +175,7 @@ function FilterWithInput({
             onClose={handleOnCloseOfSelectedValue}
           />
         ))}
-      <div className="mt-2">
+      <div className="mt-2 flex items-center gap-2">
         <input
           placeholder={placeholder}
           onChange={handleOnChange}
@@ -179,6 +183,12 @@ function FilterWithInput({
           onKeyDown={handleOnKeyDown}
           className="text-[16px] bg-white w-[130px] px-2 py-1 border border-[#d0d0d0] rounded-[10px] focus:outline-none"
         />
+        <button
+          onClick={addValueToSelectedValues}
+          className="bg-[#3C5AA5] px-3 py-1 rounded-[6px] text-white text-[16px] cursor-pointer hover:bg-[#3C5AA5]/90 transition-colors"
+        >
+          Add
+        </button>
       </div>
     </div>
   );
