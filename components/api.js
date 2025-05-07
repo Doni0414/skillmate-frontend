@@ -248,7 +248,7 @@ export const downloadResource = async (resourceId) => {
     try {
       // Fetch the file from the backend
       const response = await fetch(
-        `http://localhost:8080/api/resources/${resourceId}`,
+        getResourceURLById(resourceId)
       );
       if (!response.ok)
         throw new Error(`HTTP error! Status: ${response.status}`);
