@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { getCurrentUser, getPostsByUserId, getUserById, getUserReviewsByUserId, me } from "../../api";
+import { getAdsByUserId, getCurrentUser, getPostsByUserId, getUserById, getUserReviewsByUserId, me } from "../../api";
 import Router from "next/router";
 
 export function useProfilePageState(userId) {
@@ -35,21 +35,27 @@ export function useProfilePageState(userId) {
       .catch(error => {
         console.log("error while fetching current user", error);
       })
-    }
-  }, [userId]);
 
-  useEffect(() => {
-    if (user) {
       getPostsByUserId(userId, page, pageSize)
       .then(response => {
         setUser((lastUser) => ({
             ...lastUser,
             postsCount: response.data.length,
-            adsCount: 0
         }))
       });
+
+      getAdsByUserId(userId)
+      .then(response => {
+        setUser((lastUser) => ({
+            ...lastUser,
+            adsCount: response.data.length,
+        }))
+      })
+      .catch(error => {
+        console.log("error while fetching ads", error);
+      })
     }
-  }, [user]);
+  }, [userId]);
 
   return {user, reviews, currentUser};
 }

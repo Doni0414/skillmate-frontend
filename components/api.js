@@ -1,7 +1,6 @@
 import axios from "axios";
 import apiClient from "./api-client"
 import { RESOURCES_PREFIX } from "./my-profile/model/use-my-profile-state";
-import api from "js-cookie";
 
 export const getUserProfile = () => {
     return apiClient.get("/users/profile");
@@ -45,7 +44,6 @@ export const changePassword = (oldPassword, newPassword) => {
 }
 
 export const getResourceURLById = (resourceId) => {
-    console.log(resourceId);
     return resourceId ? RESOURCES_PREFIX + resourceId : null;
 }
 
@@ -69,9 +67,39 @@ export const getPublicationsByCategoriesAndUserIdAndPageAndPageSize = async (cat
     return response;
 }
 
+export const getPublicationsByUserId = async (userId, page, pageSize) => {
+    return apiClient.get("/posts", {
+        params: {
+            userId: userId,
+            page: page,
+            size: pageSize
+        },
+    })
+}
+
 export const getLikesCountByPostId = async (postId) => {
     const response = await apiClient.get(`/posts/${postId}/likes`)
     return response;
+}
+
+export const getLikesCountByPublicationId = (publicationId) => {
+    return apiClient.get(`/posts/${publicationId}/likes`);
+}
+
+export const getIsLikedByPublicationId = (publicationId) => {
+    return apiClient.get(`/posts/${publicationId}/is-liked`);
+}
+
+export const removeLikeByPublicationId = (publicationId) => {
+    return apiClient.delete(`/posts/${publicationId}/remove-like`);
+}
+
+export const addLikeByPublicationId = (publicationId) => {
+    return apiClient.post(`/posts/${publicationId}/likes`);
+}
+
+export const getAdsByUserId = (userId) => {
+    return apiClient.get(`/ads/by-user-id/${userId}`);
 }
 
 export const getCommentsByPostId = async (postId) => {

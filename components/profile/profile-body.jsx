@@ -1,9 +1,11 @@
+import { Publication } from "../publication/publication";
 import { AdsIcon } from "./icon/ads-icon";
 import { HeartIcon } from "./icon/heart-icon";
 import { PostsIcon } from "./icon/posts-icon";
 import { useProfileBodyState } from "./model/use-profile-body-state";
 import { ProfileBodyLayout } from "./ui/profile-body-layout";
 import { ProfileBodyMenuButton } from "./ui/profile-body-menu-button";
+import { PublicationsLayout } from "./ui/publications-layout";
 
 export function ProfileBody({ currentUser, user }) {
   const {
@@ -13,6 +15,8 @@ export function ProfileBody({ currentUser, user }) {
     handlePostsToggle,
     handleFavouritesToggle,
     handleAdsToggle,
+    publications,
+    ads,
   } = useProfileBodyState(user);
   return (
     <ProfileBodyLayout
@@ -23,12 +27,6 @@ export function ProfileBody({ currentUser, user }) {
           toggled={postsToggled}
           onClick={handlePostsToggle}
         />,
-        // <ProfileBodyMenuButton
-        //   text="FAVOURITES"
-        //   icon={<HeartIcon />}
-        //   toggled={favouritesToggled}
-        //   onClick={handleFavouritesToggle}
-        // />,
         <ProfileBodyMenuButton
           text="MY ADS"
           icon={<AdsIcon />}
@@ -36,6 +34,15 @@ export function ProfileBody({ currentUser, user }) {
           onClick={handleAdsToggle}
         />,
       ]}
+      items={
+        postsToggled ? (
+          <PublicationsLayout
+            publications={publications.map((publication) => (
+              <Publication publication={publication} />
+            ))}
+          />
+        ) : null
+      }
     />
   );
 }

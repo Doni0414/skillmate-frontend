@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  getCommentsByPostId, getCommentsByPublicationId,
+  getCommentsByPostId,
+  getCommentsByPublicationId,
   getCommentsCountByPostId,
   getLikesCountByPostId,
   getResourceURLById,
@@ -35,17 +36,20 @@ function Publication({ publication, user }) {
   const [commentsPage, setCommentsPage] = useState(1);
   const publicationRef = useRef(null);
 
-  console.log("current page: " + commentsPage)
+  console.log("current page: " + commentsPage);
 
   useEffect(() => {
     fetchData();
     const interval = setInterval(() => {
-      getCommentsByPublicationId(publication.id, commentsPage, COMMENTS_PER_PAGE)
-          .then(response => {
-            if (response.data.content.length > 0) {
-              setComments(response.data.content);
-            }
-          });
+      getCommentsByPublicationId(
+        publication.id,
+        commentsPage,
+        COMMENTS_PER_PAGE,
+      ).then((response) => {
+        if (response.data.content.length > 0) {
+          setComments(response.data.content);
+        }
+      });
     }, 3_000);
     return () => {
       clearInterval(interval);
@@ -56,7 +60,6 @@ function Publication({ publication, user }) {
     const fetchedAuthor = await getUserById(publication.creatorId);
     setAuthor(fetchedAuthor.data);
   };
-
 
   return (
     <div
@@ -89,10 +92,7 @@ function Publication({ publication, user }) {
         publication={publication}
         user={user}
       />
-      <CommentsMoreButton
-        page={commentsPage}
-        setPage={setCommentsPage}
-      />
+      <CommentsMoreButton page={commentsPage} setPage={setCommentsPage} />
     </div>
   );
 }
@@ -157,8 +157,6 @@ function Category({ category }) {
 }
 
 function PublicationDescription({ className, author, description }) {
-  const desc =
-    "Recently, I have started learning english! Wish me your bests! Recently, I have started learning english! Wish me your bests! Recently, I have started learning english! Wish me your bests!";
   return (
     <div className="flex gap-1">
       <div
@@ -168,7 +166,7 @@ function PublicationDescription({ className, author, description }) {
           className,
         )}
       >
-        {desc}
+        {description}
       </div>
     </div>
   );
