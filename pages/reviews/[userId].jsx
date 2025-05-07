@@ -46,7 +46,12 @@ export default function ReviewsPage({ params }) {
   return (
     <div className={clsx(roboto.className, "")}>
       <Header />
-      <ProfileHeader reviews={reviews} user={user} className="mt-[75px]" />
+      <ProfileHeader
+        reviews={reviews}
+        user={user}
+        className="mt-[75px]"
+        isReviewsPage={true}
+      />
       <ReviewsContent reviews={reviews} setReviews={setReviews} user={user} />
     </div>
   );

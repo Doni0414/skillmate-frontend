@@ -2,19 +2,31 @@ import { useRouter } from "next/router";
 import apiClient from "../../components/api-client";
 import { withAuth } from "../../components/auth";
 import { Header } from "../../components/header/header";
+import { ProfileHeader } from "../../components/profile/profile-header";
+import { useProfilePageState } from "../../components/profile/model/use-profile-page-state";
+import { ProfileBody } from "../../components/profile/profile-body";
 
 function ProfilePage() {
   const router = useRouter();
   const { userId } = router.query;
-  if (!userId) return null;
-  return <ProfilePageLayout header={<Header />} body={<div>{userId}</div>} />;
+
+  const { user, reviews, currentUser } = useProfilePageState(userId);
+  if (!user || !currentUser || !reviews) return null;
+  return (
+    <ProfilePageLayout
+      header={<Header />}
+      profileHeader={<ProfileHeader user={user} reviews={reviews} />}
+      profileBody={<ProfileBody currentUser={currentUser} user={user} />}
+    />
+  );
 }
 
-function ProfilePageLayout({ header, body }) {
+function ProfilePageLayout({ header, profileHeader, profileBody }) {
   return (
     <div>
       {header}
-      {body}
+      <div className="mt-12">{profileHeader}</div>
+      <div className="flex justify-center">{profileBody}</div>
     </div>
   );
 }

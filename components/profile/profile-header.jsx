@@ -8,24 +8,29 @@ import apiClient from "../api-client";
 import { ViewSkillPopup } from "../common/view-skill-popup/view-skill-popup";
 import { getResourceURLById } from "../api";
 
-export function ProfileHeader({ user, className, reviews }) {
+export function ProfileHeader({ user, className, reviews, isReviewsPage }) {
   return (
     <div className={className}>
-      <div className="ml-[272px] w-fit flex gap-[164px]">
+      <div className="ml-[349px] w-fit flex gap-[98px]">
         <Image
           width={100}
           height={100}
           src={getResourceURLById(user.imageResourceId)}
           alt="ava"
-          className="w-[100px] h-[100px] rounded-full"
+          className="w-[100px] h-[100px] rounded-full object-cover"
         />
-        <UserInfoContainer reviews={reviews} user={user} className="mt-5" />
+        <UserInfoContainer
+          reviews={reviews}
+          user={user}
+          className="mt-5"
+          isReviewsPage={isReviewsPage}
+        />
       </div>
     </div>
   );
 }
 
-function UserInfoContainer({ user, className, reviews }) {
+function UserInfoContainer({ user, className, reviews, isReviewsPage }) {
   const rating =
     reviews.length > 0
       ? (
@@ -44,10 +49,20 @@ function UserInfoContainer({ user, className, reviews }) {
           <div className="text-[17px]">{rating}</div>
           <StarsContainer rating={rating} />
         </div>
-        <button className="cursor-pointer">
-          <GoBackIcon />
-          <div className="font-semibold text-[13px]">Go back</div>
-        </button>
+        {isReviewsPage ? (
+          <a href={`/profile/${user.id}`}>
+            <button className="cursor-pointer">
+              <GoBackIcon />
+              <div className="font-semibold text-[13px]">Go back</div>
+            </button>
+          </a>
+        ) : (
+          <a href={`/reviews/${user.id}`}>
+            <button className="cursor-pointer w-[110px] h-[32px] font-semibold text-[13px] rounded-[8px] bg-[#EFEFEF]">
+              View reviews
+            </button>
+          </a>
+        )}
       </div>
       <div>
         <div className="font-semibold text-[14px]">{user.fullName}</div>
@@ -72,15 +87,17 @@ function SkillsContainer({ user }) {
   const [skills, setSkills] = useState([]);
 
   useEffect(() => {
-    apiClient
-      .get("/skills?userId=" + user.id)
-      .then((response) => {
-        setSkills(response.data);
-      })
-      .catch((error) => {
-        console.log("error while obtaining user skills", error);
-      });
-  }, []);
+    if (user) {
+      apiClient
+        .get("/skills?userId=" + user.id)
+        .then((response) => {
+          setSkills(response.data);
+        })
+        .catch((error) => {
+          console.log("error while obtaining user skills", error);
+        });
+    }
+  }, [user]);
 
   return (
     <div className="mt-[22px] flex items-center gap-[18px]">

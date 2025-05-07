@@ -93,6 +93,10 @@ export const me = async () => {
     return response;
 }
 
+export const getCurrentUser = () => {
+    return apiClient.get("/users/profile");
+}
+
 export const forgotPassword = (email) => {
     return apiClient.post("/users/auth/forgot-password", {}, {
         headers: {
@@ -194,6 +198,20 @@ export const searchUsers = (searchValue, page, pageSize) => {
             name: searchValue,
             page,
             size: pageSize
+        }
+    })
+}
+
+export const getUserReviewsByUserId = (userId) => {
+    return apiClient.get(`/reviews/recipient/${userId}`);
+}
+
+export const getPostsByUserId = (userId, page, size) => {
+    return apiClient.get("/posts", {
+        params: {
+            userId,
+            page,
+            size
         }
     })
 }

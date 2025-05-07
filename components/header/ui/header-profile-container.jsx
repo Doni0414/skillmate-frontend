@@ -44,8 +44,9 @@ export function HeaderProfileContainer({ user }) {
         <PopupNavigationButtons
           isAdditionalNavigationPopupOpen={isAdditionalNavigationPopupOpen}
         >
-          <NavigationLink link="/my-profile" text="Profile" />
-          <NavigationButton handleClick={handleClickOnLogout} text="Logout" />
+          <NavigationLink link={`/profile/${user.id}`} text="My profile" />
+          <NavigationLink link="/my-profile" text="Profile settings" />
+          <NavigationButton handleClick={handleClickOnLogout} text="Log out" />
         </PopupNavigationButtons>
       }
     />
