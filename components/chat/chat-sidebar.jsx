@@ -3,21 +3,31 @@ import { ChatContainer } from "./chat-container";
 import { ChatIcon } from "./icon/chat-icon";
 import apiClient from "../api-client";
 
-export function ChatSidebar({ onChatClick, activeChatId, currentUserId }) {
+export function ChatSidebar({
+  onChatClick,
+  activeChatId,
+  currentUser,
+  lastMessageAuthorId,
+}) {
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    apiClient
-      .get("/chats")
-      .then((response) => {
-        setChats(response.data);
-      })
-      .catch((error) => {
-        console.log("error while obtaining chats", error);
-      });
-  }, []);
+    const interval = setInterval(() => {
+      apiClient
+        .get("/chats")
+        .then((response) => {
+          setChats(response.data);
+        })
+        .catch((error) => {
+          console.log("Error while obtaining chats", error);
+        });
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [currentUser]);
 
-  console.log(chats);
+  console.log("chats", chats);
 
   return (
     <div className="w-fit px-6 pt-[30px] h-screen bg-white">
@@ -31,7 +41,7 @@ export function ChatSidebar({ onChatClick, activeChatId, currentUserId }) {
           key={idx}
           isActive={chat.id == activeChatId}
           onClick={onChatClick}
-          currentUserId={currentUserId}
+          currentUser={currentUser}
         />
       ))}
     </div>

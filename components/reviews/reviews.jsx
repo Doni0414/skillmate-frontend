@@ -13,7 +13,7 @@ import { EmptyStarIcon } from "../profile/icon/empty-star";
 import apiClient from "../api-client";
 import { SuccessMessage } from "../common/success-message";
 import { FailureMessage } from "../common/failure-message";
-import {getResourceURLById} from "../api";
+import { getResourceURLById } from "../api";
 
 const firaSans = Fira_Sans({
   subsets: ["latin"],
@@ -150,8 +150,12 @@ function CreateReviewPopup({
         }, 500);
       })
       .catch((error) => {
+        if (error.response.data.errorMessage.endsWith("does already exists")) {
+          setErrorMessage("You have already sent review to this user!");
+        } else {
+          setErrorMessage("Error while sending review");
+        }
         console.log("error while sending review", error);
-        setErrorMessage("Error while sending review");
         setTimeout(() => {
           setErrorMessage(null);
         }, 3000);

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { computeDateString } from "./chat-container";
 import { useEffect, useState } from "react";
 import apiClient from "../api-client";
-import {getResourceURLById} from "../api";
+import { getResourceURLById } from "../api";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -29,7 +29,7 @@ export function MessageContainer({ message, currentUserId }) {
 
   const messageClassName = clsx(
     "relative -top-[5px]",
-    messageType === "own" && "right-[56px]",
+    messageType === "own" && "right-[56px] float-right",
     messageType === "another" && "left-14",
   );
 
@@ -110,7 +110,7 @@ function MessageUiKit({ messageType, text, className }) {
     another: "bg-white text-[#515151] rounded-tl-[1px]",
   };
   const computedClassName = clsx(
-    "px-6 py-4  max-w-[500px] text-[18px] rounded-[14px] break-all",
+    "px-6 py-4 w-fit max-w-[500px] text-[18px] rounded-[14px] break-all",
     className,
     inter.className,
     uiKitStyles[messageType],

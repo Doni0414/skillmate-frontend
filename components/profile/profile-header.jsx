@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { Modal } from "../common/modal";
 import { StarsContainer } from "../common/stars-container";
 import apiClient from "../api-client";
-import {ViewSkillPopup} from "../common/view-skill-popup/view-skill-popup";
-import {getResourceURLById} from "../api";
+import { ViewSkillPopup } from "../common/view-skill-popup/view-skill-popup";
+import { getResourceURLById } from "../api";
 
 export function ProfileHeader({ user, className, reviews }) {
   return (
@@ -103,54 +103,14 @@ function SkillCard({ skill }) {
     setShowViewSkillPopup(false);
   };
 
-  async function downloadResourceInner(resourceId) {
-    try {
-      // Fetch the file from the backend
-      const response = await fetch(
-        `http://localhost:8080/api/resources/${resourceId}`,
-      );
-      if (!response.ok)
-        throw new Error(`HTTP error! Status: ${response.status}`);
-
-      // Try extracting filename from Content-Disposition header
-      const disposition = response.headers.get("Content-Disposition");
-      let fileName = `resource_${resourceId}.bin`; // Default filename
-
-      if (disposition && disposition.includes("filename=")) {
-        fileName = disposition.split("filename=")[1].replace(/['"]/g, "");
-      }
-
-      console.log("filename is " + fileName);
-
-      const blob = await response.blob(); // Convert response to Blob
-      console.log(blob);
-      console.log(new File([blob], fileName, { type: blob.type }));
-      return new File([blob], fileName, { type: blob.type }); // Create a File object
-    } catch (error) {
-      console.error("Error downloading resource:", error);
-      return null;
-    }
-  }
-
-  const fileToAchievementInner = (file) => {
-    if (file) {
-      console.log(file);
-      return {
-        fileName: file.name ? file.name : "File",
-        size: file.size ? (file.size / (1024 * 1024)).toFixed(2) + "MB" : "",
-      };
-    }
-  };
   return (
     <div>
       {showViewSkillPopup ? (
-        <Modal isOpen={showViewSkillPopup} onClose={closeViewSkillPopup}>
-          <ViewSkillPopup
-            skill={skill}
-            downloadResource={downloadResourceInner}
-            fileToAchievement={fileToAchievementInner}
-          />
-        </Modal>
+        <ViewSkillPopup
+          skill={skill}
+          isOpen={showViewSkillPopup}
+          onClose={closeViewSkillPopup}
+        />
       ) : (
         <button
           onClick={handleClick}

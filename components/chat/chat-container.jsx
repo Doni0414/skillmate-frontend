@@ -3,11 +3,7 @@ import { Roboto } from "next/font/google";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import apiClient from "../api-client";
-import {getResourceURLById} from "../api";
-
-function computeClassNameOfChatHeader(chat) {
-  return "";
-}
+import { getResourceURLById } from "../api";
 
 export function otherUserId(chat, currentUserId) {
   return chat.senderId === currentUserId ? chat.receiverId : chat.senderId;
@@ -18,14 +14,13 @@ const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
 });
 
-export function ChatContainer({ chat, isActive, onClick, currentUserId }) {
-  console.log(chat);
+export function ChatContainer({ chat, isActive, onClick, currentUser }) {
   const [otherUser, setOtherUser] = useState({});
+  const [messages, setMessages] = useState([]);
 
-  console.log(otherUserId(chat, currentUserId));
   useEffect(() => {
     apiClient
-      .get("/users/profile/" + otherUserId(chat, currentUserId))
+      .get("/users/profile/" + otherUserId(chat, currentUser.id))
       .then((response) => {
         console.log("other user response", JSON.stringify(response.data));
         setOtherUser(response.data);
@@ -33,9 +28,15 @@ export function ChatContainer({ chat, isActive, onClick, currentUserId }) {
       .catch((error) => {
         console.log("error while obtaining chat user", error);
       });
-  }, []);
-
-  // console.log(otherUser);
+    apiClient
+      .get("/messages/chat/" + chat.id)
+      .then((response) => {
+        setMessages(response.data);
+      })
+      .catch((error) => {
+        console.log("error while obtaining messages", error);
+      });
+  }, [currentUser, chat]);
 
   return (
     <div
@@ -45,24 +46,42 @@ export function ChatContainer({ chat, isActive, onClick, currentUserId }) {
       <Image
         width={56}
         height={66}
-        className="w-[56px] h-[66px] rounded-full"
+        className="w-[56px] h-[66px] rounded-full object-cover"
         src={getResourceURLById(otherUser.imageResourceId)}
         alt="ava"
       />
       <ChatUserContainer
         isActive={isActive}
         user={otherUser}
+        currentUser={currentUser}
+        lastMessageAuthorId={
+          messages.length > 0 && messages[messages.length - 1].senderId
+        }
         lastMessage={chat.lastMessage}
       />
       <MessageDateContainer
+        unreadCount={chat.unreadCount}
         lastMessageTime={chat.lastMessageTime}
-        currentUserId={4}
+        currentUserId={currentUser.id}
       />
     </div>
   );
 }
 
-function ChatUserContainer({ isActive, user, lastMessage }) {
+function ChatUserContainer({
+  isActive,
+  user,
+  lastMessage,
+  currentUser,
+  lastMessageAuthorId,
+}) {
+  console.log("user", currentUser);
+  console.log("lastMessageAuthorId", lastMessageAuthorId);
+  const getLastMessage = () => {
+    return currentUser.id === lastMessageAuthorId
+      ? "You: " + lastMessage
+      : lastMessage;
+  };
   return (
     <div className="">
       <div
@@ -75,8 +94,8 @@ function ChatUserContainer({ isActive, user, lastMessage }) {
         {user.fullName}
       </div>
       {lastMessage && (
-        <div className="w-[204px] h-10 text-[14px] text-[#5F5F5F] overflow-hidden text-ellipsis leading-4">
-          {lastMessage}
+        <div className="w-[204px] text-[14px] text-[#5F5F5F] overflow-hidden text-ellipsis whitespace-nowrap leading-4">
+          {getLastMessage()}
         </div>
       )}
     </div>
@@ -101,7 +120,7 @@ export function computeDateString(timestamp) {
   }
 }
 
-function MessageDateContainer({ lastMessageTime, currentUserId }) {
+function MessageDateContainer({ lastMessageTime, currentUserId, unreadCount }) {
   return (
     <div className="w-[90px] flex flex-col items-end">
       {lastMessageTime && (
@@ -109,11 +128,6 @@ function MessageDateContainer({ lastMessageTime, currentUserId }) {
           {computeDateString(message.date)}
         </div>
       )}
-      {/* {!message.seen & (currentUserId != message.authorId) && (
-        <div className="flex justify-center items-center bg-[#00A3FF] rounded-full w-[18px] h-[18px] text-white font-semibold text-[12px]">
-          1
-        </div>
-      )} */}
     </div>
   );
 }

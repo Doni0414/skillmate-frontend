@@ -14,33 +14,30 @@ export function ChatPageContent() {
   const [activeChatId, setActiveChatId] = useState(-1);
   const [activeChat, setActiveChat] = useState({});
 
-  const [currentUserId, setCurrentUserId] = useState();
+  const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
     apiClient
       .get("/users/profile")
       .then((response) => {
-        setCurrentUserId(response.data.id);
+        setCurrentUser(response.data);
       })
       .catch((error) => {
         console.log("error while obtaining user profile", error);
       });
   }, []);
 
-  console.log("active chat id: " + activeChatId);
-  console.log("active chat: " + JSON.stringify(activeChat));
-
   return (
     <div className={clsx(inter.className, "flex")}>
       <ChatSidebar
-        currentUserId={currentUserId}
+        currentUser={currentUser}
         activeChatId={activeChatId}
         onChatClick={(chat) => {
           setActiveChatId(chat.id);
           setActiveChat(chat);
         }}
       />
-      <Chat chat={activeChat} currentUserId={currentUserId} />
+      <Chat chat={activeChat} currentUser={currentUser} />
     </div>
   );
 }

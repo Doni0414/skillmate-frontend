@@ -111,7 +111,7 @@ function AdContainer({
               src={getResourceURLById(user.imageResourceId)}
               width={30}
               height={30}
-              className="w-[30px] h-[30px] rounded-full"
+              className="w-[30px] h-[30px] rounded-full object-fit"
             />
             <div className="w-[170px] text-ellipsis overflow-hidden whitespace-nowrap text-[24px] text-white">
               {user.fullName}
@@ -169,7 +169,7 @@ function AdPopup({ adId, skillName, user, level, description, adImageSrc }) {
           src={adImageSrc}
           width={90}
           height={90}
-          className="ml-auto w-[90px] h-[90px] rounded-full"
+          className="ml-auto w-[90px] h-[90px] rounded-full object-cover"
         />
       </div>
       <div className="px-10">
