@@ -17,11 +17,13 @@ export function AdCardLayout({
         inter.className,
       )}
     >
-      <div className="flex gap-6 items-center mb-4">
-        {editButton}
-        {deleteButton}
-        {seeRequestsButton}
-      </div>
+      {isOwn && (
+        <div className="flex gap-6 items-center mb-4">
+          {editButton}
+          {deleteButton}
+          {seeRequestsButton}
+        </div>
+      )}
       <div className="relative">
         {adImage}
         <div className="absolute bottom-2 left-2 font-bold text-[29px] text-white">

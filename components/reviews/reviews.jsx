@@ -296,7 +296,7 @@ function Review({ review }) {
   }, []);
 
   return (
-    <div className="pl-5 py-5 pr-14">
+    <div className="pl-5 py-5 pr-14 w-[400px]">
       <div className="mb-3 w-[366px] flex items-center justify-between">
         <div className="flex items-center gap-[18px]">
           <Image

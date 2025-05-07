@@ -6,6 +6,7 @@ import { ReviewsContent } from "../../components/reviews/reviews";
 import { useEffect, useState } from "react";
 import apiClient from "../../components/api-client";
 import { useRouter } from "next/router";
+import { getAdsByUserId, getPostsByUserId } from "../../components/api";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -39,6 +40,24 @@ export default function ReviewsPage({ params }) {
       })
       .catch((error) => {
         console.log("error while obtaining user reviews", error);
+      });
+
+    getPostsByUserId(userId, 0, 1000000).then((response) => {
+      setUser((lastUser) => ({
+        ...lastUser,
+        postsCount: response.data.length,
+      }));
+    });
+
+    getAdsByUserId(userId)
+      .then((response) => {
+        setUser((lastUser) => ({
+          ...lastUser,
+          adsCount: response.data.length,
+        }));
+      })
+      .catch((error) => {
+        console.log("error while fetching ads", error);
       });
   }, [userId]);
 

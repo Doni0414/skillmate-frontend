@@ -7,6 +7,7 @@ import { HeaderProfileContainerLayout } from "./header-profile-container-layout"
 import { PopupNavigationButtons } from "./popup-navigation-buttons";
 import { NavigationButton } from "./navigation-button";
 import Router from "next/router";
+import defaultAvaSrc from "../images/ava.png";
 
 export function HeaderProfileContainer({ user }) {
   const [isAdditionalNavigationPopupOpen, setIsAdditionalNavigationPopupOpen] =
@@ -30,10 +31,14 @@ export function HeaderProfileContainer({ user }) {
       user={user}
       profileImage={
         <Image
-          src={getResourceURLById(user.imageResourceId)}
+          src={
+            user.imageResourceId
+              ? getResourceURLById(user.imageResourceId)
+              : defaultAvaSrc
+          }
           width={28}
           height={28}
-          className="w-9 h-9 rounded-full"
+          className="w-9 h-9 rounded-full object-cover"
         />
       }
       arrowDownIcon={<ArrowHeaderIcon />}

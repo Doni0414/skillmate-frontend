@@ -3,6 +3,7 @@ import {
   getCommentsByPostId,
   getCommentsByPublicationId,
   getCommentsCountByPostId,
+  getIsLikedByPublicationId,
   getLikesCountByPostId,
   getResourceURLById,
   getUserById,
@@ -54,7 +55,7 @@ function Publication({ publication, user }) {
     return () => {
       clearInterval(interval);
     };
-  }, [commentsPage]);
+  }, [commentsPage, publication]);
 
   const fetchData = async () => {
     const fetchedAuthor = await getUserById(publication.creatorId);
@@ -195,6 +196,14 @@ function LikesCommentsCountContainer({ className, publication, user }) {
     const fetchedCommentsCount = await getCommentsCountByPostId(publication.id);
     console.log(fetchedCommentsCount);
     setCommentsCount(fetchedCommentsCount);
+
+    getIsLikedByPublicationId(publication.id)
+      .then((response) => {
+        setIsLiked(response.data);
+      })
+      .catch((error) => {
+        console.log("error while obtaining is liked", error);
+      });
   };
 
   const getCountString = (count) => {
