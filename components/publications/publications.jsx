@@ -121,6 +121,7 @@ function PublicationAuthorContainer({ author }) {
   return (
     <div className="flex items-center gap-6 mb-[30px]">
       <Image
+        className="rounded-full w-10 h-10 object-cover"
         width={40}
         height={40}
         src={getResourceURLById(author.imageResourceId)}

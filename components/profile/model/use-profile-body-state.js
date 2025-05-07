@@ -8,6 +8,7 @@ export function useProfileBodyState(user) {
     const [adsToggled, setAdsToggled] = useState(false);
     const [publications, setPublications] = useState([]);
     const [ads, setAds] = useState([]);
+    const [isCreateAdPopupOpen, setIsCreateAdPopupOpen] = useState(false);
 
     const handlePostsToggle = () => {
         setPostsToggled(true);
@@ -47,6 +48,14 @@ export function useProfileBodyState(user) {
         }
     }, [postsToggled, adsToggled, user]);
 
+    const handleClickOnCreateNewAdButton = () => {
+        setIsCreateAdPopupOpen(true);
+    }
+
+    const closeCreateAdPopup = () => {
+        setIsCreateAdPopupOpen(false);
+    }
+
     return {
         postsToggled, 
         favouritesToggled, 
@@ -55,6 +64,9 @@ export function useProfileBodyState(user) {
         handlePostsToggle, 
         handleFavouritesToggle, 
         handleAdsToggle,
-        publications
+        publications,
+        handleClickOnCreateNewAdButton,
+        isCreateAdPopupOpen,
+        closeCreateAdPopup
     };
 }

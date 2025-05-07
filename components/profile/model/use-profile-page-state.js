@@ -57,5 +57,6 @@ export function useProfilePageState(userId) {
     }
   }, [userId]);
 
-  return {user, reviews, currentUser};
+  const isOwn = currentUser && user && currentUser.id === user.id;
+  return {user, reviews, currentUser, isOwn};
 }

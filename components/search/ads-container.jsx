@@ -111,7 +111,7 @@ function AdContainer({
               src={getResourceURLById(user.imageResourceId)}
               width={30}
               height={30}
-              className="w-[30px] h-[30px] rounded-full object-fit"
+              className="w-[30px] h-[30px] rounded-full object-cover"
             />
             <div className="w-[170px] text-ellipsis overflow-hidden whitespace-nowrap text-[24px] text-white">
               {user.fullName}

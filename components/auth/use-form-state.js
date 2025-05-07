@@ -76,7 +76,7 @@ export function useFormState(authType) {
            }
         }).then(response => {
             console.log(response);
-            Router.push("/my-profile")
+            Router.push("/search")
         }).catch(error => {
             console.log(error)
             const errorMessages = error.response.data;
@@ -174,8 +174,7 @@ export function useFormState(authType) {
                     "Content-Type": "application/json"
                 }
             }).then(response => {
-                Router.push("/");
-                // closeVerification();
+                Router.push("/search");
             }).catch(error => {
                 setVerificationErrorMessage(error.response.data.errorMessage);
             });

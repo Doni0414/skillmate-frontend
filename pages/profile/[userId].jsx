@@ -10,13 +10,15 @@ function ProfilePage() {
   const router = useRouter();
   const { userId } = router.query;
 
-  const { user, reviews, currentUser } = useProfilePageState(userId);
+  const { user, reviews, currentUser, isOwn } = useProfilePageState(userId);
   if (!user || !currentUser || !reviews) return null;
   return (
     <ProfilePageLayout
       header={<Header />}
       profileHeader={<ProfileHeader user={user} reviews={reviews} />}
-      profileBody={<ProfileBody currentUser={currentUser} user={user} />}
+      profileBody={
+        <ProfileBody isOwn={isOwn} currentUser={currentUser} user={user} />
+      }
     />
   );
 }
