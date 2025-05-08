@@ -5,6 +5,7 @@ import { computeDateString } from "./chat-container";
 import { useEffect, useState } from "react";
 import apiClient from "../api-client";
 import { getResourceURLById } from "../api";
+import defaultAvaSrc from "../header/images/ava.png";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -70,7 +71,7 @@ function ProfileContainer({ profileType, userId, className }) {
       .catch((error) => {
         console.log("error while obtaining profile of user", error);
       });
-  }, []);
+  }, [userId]);
   const nameContainerClassName = clsx(
     {
       own: clsx("font-medium text-[#515151] text-[16px] ", inter.className),
@@ -86,7 +87,11 @@ function ProfileContainer({ profileType, userId, className }) {
       <Image
         width={48}
         height={48}
-        src={getResourceURLById(user.imageResourceId)}
+        src={
+          user.imageResourceId
+            ? getResourceURLById(user.imageResourceId)
+            : defaultAvaSrc
+        }
         alt="profile"
         className="w-12 h-12 rounded-full"
       />

@@ -9,6 +9,7 @@ import { SuccessMessage } from "../common/success-message";
 import { FailureMessage } from "../common/failure-message";
 import { FormTextArea } from "../common/form-text-area";
 import { getResourceURLById } from "../api";
+import defaultAvaSrc from "../header/images/ava.png";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -108,7 +109,11 @@ function AdContainer({
           </div>
           <div className="flex items-center gap-x-[10px]">
             <Image
-              src={getResourceURLById(user.imageResourceId)}
+              src={
+                user.imageResourceId
+                  ? getResourceURLById(user.imageResourceId)
+                  : defaultAvaSrc
+              }
               width={30}
               height={30}
               className="w-[30px] h-[30px] rounded-full object-cover"
@@ -175,7 +180,11 @@ function AdPopup({ adId, skillName, user, level, description, adImageSrc }) {
       <div className="px-10">
         <div className="flex items-center gap-[10px]">
           <Image
-            src={getResourceURLById(user.imageResourceId)}
+            src={
+              user.imageResourceId
+                ? getResourceURLById(user.imageResourceId)
+                : defaultAvaSrc
+            }
             width={40}
             height={40}
             className="w-10 h-10 rounded-full"

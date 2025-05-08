@@ -6,6 +6,7 @@ import { usePublicationState } from "./model/use-publication-state";
 import { LikesElement } from "./ui/likes-element";
 import { CommentsElement } from "./ui/comments-element";
 import { CategoryLayout } from "./ui/category-layout";
+import defaultAvaSrc from "../header/images/ava.png";
 
 export function Publication({ publication }) {
   const { author, comments, likesCount, isLiked, handleClickOnLikeButton } =
@@ -17,7 +18,11 @@ export function Publication({ publication }) {
         <PublicationHeaderLayout
           profileImage={
             <Image
-              src={getResourceURLById(author.imageResourceId)}
+              src={
+                author.imageResourceId
+                  ? getResourceURLById(author.imageResourceId)
+                  : defaultAvaSrc
+              }
               alt="ava"
               width={35}
               height={35}
@@ -32,7 +37,11 @@ export function Publication({ publication }) {
       picture={
         <Image
           alt="publication-pic"
-          src={getResourceURLById(publication.resourceId)}
+          src={
+            publication.resourceId
+              ? getResourceURLById(publication.resourceId)
+              : defaultAvaSrc
+          }
           width={341}
           height={233}
           className="object-fit w-[341px] h-[233px]"

@@ -7,6 +7,7 @@ import { StarsContainer } from "../common/stars-container";
 import apiClient from "../api-client";
 import { ViewSkillPopup } from "../common/view-skill-popup/view-skill-popup";
 import { getResourceURLById } from "../api";
+import defaultAvaSrc from "../header/images/ava.png";
 
 export function ProfileHeader({ user, className, reviews, isReviewsPage }) {
   return (
@@ -15,7 +16,11 @@ export function ProfileHeader({ user, className, reviews, isReviewsPage }) {
         <Image
           width={100}
           height={100}
-          src={getResourceURLById(user.imageResourceId)}
+          src={
+            user.imageResourceId
+              ? getResourceURLById(user.imageResourceId)
+              : defaultAvaSrc
+          }
           alt="ava"
           className="w-[100px] h-[100px] rounded-full object-cover"
         />

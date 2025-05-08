@@ -18,7 +18,7 @@ export function HeaderProfileContainer({ user }) {
   };
 
   const handleOnMouseLeave = () => {
-    setIsAdditionalNavigationPopupOpen(true);
+    setIsAdditionalNavigationPopupOpen(false);
   };
 
   const handleClickOnLogout = () => {

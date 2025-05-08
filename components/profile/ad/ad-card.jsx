@@ -12,6 +12,8 @@ export function AdCard({ ad, isOwn }) {
     seeRequestsPopupOpen,
     handleClickOnSeeRequestsButton,
     closeSeeRequestsPopup,
+    requests,
+    setRequests,
   } = useAdCardState(ad);
   return (
     <>
@@ -37,8 +39,10 @@ export function AdCard({ ad, isOwn }) {
         isOwn={isOwn}
       />
       <SeeRequestsPopup
+        setRequests={setRequests}
         isOpen={seeRequestsPopupOpen}
         onClose={closeSeeRequestsPopup}
+        requests={requests}
       />
     </>
   );

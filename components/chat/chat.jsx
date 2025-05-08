@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import apiClient from "../api-client";
 import { otherUserId } from "./chat-container";
 import { getResourceURLById } from "../api";
+import defaultAvaSrc from "../header/images/ava.png";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -70,7 +71,11 @@ function ChatHeader({ chat, chatId, currentUserId, otherUser }) {
       {chatIsChoosen(chat) && (
         <div className="flex gap-5 items-center">
           <Image
-            src={getResourceURLById(otherUser.imageResourceId)}
+            src={
+              otherUser.imageResourceId
+                ? getResourceURLById(otherUser.imageResourceId)
+                : defaultAvaSrc
+            }
             width={56}
             height={56}
             className="w-14 h-14 rounded-full object-cover"

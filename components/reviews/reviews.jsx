@@ -14,6 +14,7 @@ import apiClient from "../api-client";
 import { SuccessMessage } from "../common/success-message";
 import { FailureMessage } from "../common/failure-message";
 import { getResourceURLById } from "../api";
+import defaultAvaSrc from "../header/images/ava.png";
 
 const firaSans = Fira_Sans({
   subsets: ["latin"],
@@ -300,7 +301,11 @@ function Review({ review }) {
       <div className="mb-3 w-[366px] flex items-center justify-between">
         <div className="flex items-center gap-[18px]">
           <Image
-            src={getResourceURLById(author.imageResourceId)}
+            src={
+              author.imageResourceId
+                ? getResourceURLById(author.imageResourceId)
+                : defaultAvaSrc
+            }
             width={40}
             height={40}
             className="w-10 h-10 rounded-full"

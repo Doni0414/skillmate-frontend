@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import apiClient from "../api-client";
 import { getResourceURLById } from "../api";
+import defaultAvaSrc from "../header/images/ava.png";
 
 export function otherUserId(chat, currentUserId) {
   return chat.senderId === currentUserId ? chat.receiverId : chat.senderId;
@@ -47,7 +48,11 @@ export function ChatContainer({ chat, isActive, onClick, currentUser }) {
         width={56}
         height={66}
         className="w-[56px] h-[66px] rounded-full object-cover"
-        src={getResourceURLById(otherUser.imageResourceId)}
+        src={
+          otherUser.imageResourceId
+            ? getResourceURLById(otherUser.imageResourceId)
+            : defaultAvaSrc
+        }
         alt="ava"
       />
       <ChatUserContainer

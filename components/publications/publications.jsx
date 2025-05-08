@@ -19,6 +19,7 @@ import { SuccessMessage } from "../common/success-message";
 import { Comments } from "./comments";
 import { PagedElement } from "../common/paged-element";
 import { PlusIcon } from "../common/icons/plus-icon";
+import defaultAvaSrc from "../header/images/ava.png";
 
 export function Publications({ publications, user }) {
   return (
@@ -125,7 +126,11 @@ function PublicationAuthorContainer({ author }) {
         className="rounded-full w-10 h-10 object-cover"
         width={40}
         height={40}
-        src={getResourceURLById(author.imageResourceId)}
+        src={
+          author.imageResourceId
+            ? getResourceURLById(author.imageResourceId)
+            : defaultAvaSrc
+        }
         alt="avatar"
       />
       <div className={clsx(mulish.className, "font-bold")}>

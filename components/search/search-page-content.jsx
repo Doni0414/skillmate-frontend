@@ -10,6 +10,7 @@ import Image from "next/image";
 import { getResourceURLById } from "../api";
 import { ViewProfileButton } from "./view-profile-button";
 import { SkillCard } from "./skill-card";
+import defaultAvaSrc from "../header/images/ava.png";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -87,7 +88,11 @@ export function SearchPageContent({ className }) {
                   ProfileImage={
                     <Image
                       alt="ava"
-                      src={getResourceURLById(user.imageResourceId)}
+                      src={
+                        user.imageResourceId
+                          ? getResourceURLById(user.imageResourceId)
+                          : defaultAvaSrc
+                      }
                       width={50}
                       height={50}
                       className="w-[50px] h-[50px] rounded-full"

@@ -3,6 +3,7 @@ import { getResourceURLById, getUserById } from "../api";
 import Image from "next/image";
 import clsx from "clsx";
 import { mulish } from "../fonts";
+import defaultAvaSrc from "../header/images/ava.png";
 
 export function Comments({ className, comments, publication, user }) {
   return (
@@ -32,7 +33,11 @@ function Comment({ comment, publication, user }) {
       <Image
         width={40}
         height={40}
-        src={getResourceURLById(author.imageResourceId)}
+        src={
+          author.imageResourceId
+            ? getResourceURLById(author.imageResourceId)
+            : defaultAvaSrc
+        }
         alt="user ava"
         className="w-10 h-10 rounded-full"
       />

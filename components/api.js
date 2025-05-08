@@ -94,12 +94,24 @@ export const removeLikeByPublicationId = (publicationId) => {
     return apiClient.delete(`/posts/${publicationId}/remove-like`);
 }
 
+export const getRequestsByAdId = (adId) => {
+    return apiClient.get(`/ads/exchange-requests/by-ad-id/${adId}`);
+}
+
 export const addLikeByPublicationId = (publicationId) => {
     return apiClient.post(`/posts/${publicationId}/likes`);
 }
 
 export const getAdsByUserId = (userId) => {
     return apiClient.get(`/ads/by-user-id/${userId}`);
+}
+
+export const changeExchangeRequestStatus = (requestId, status) => {
+    return apiClient.patch(`/ads/exchange-requests/${requestId}`, {}, {
+        params: {
+            status
+        }
+    })
 }
 
 export const getCommentsByPostId = async (postId) => {
