@@ -31,7 +31,7 @@ export function useCreateAdState(user, closePopup) {
       };
       const [skills, setSkills] = useState([]);
     
-      const skillsValues = skills.map((skill) => skill.name);
+      const skillsValues = skills ? skills.map((skill) => skill.name) : [];
     
       const imageInputRef = useRef(null);
       const handleUploadImageClick = (e) => {
