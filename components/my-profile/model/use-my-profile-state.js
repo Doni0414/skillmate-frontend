@@ -6,7 +6,7 @@ import { fetchAchievementsFiles } from "../../common/achievements/model/fetch-ac
 import { downloadResource, editSkill, getSkillsByUserId } from "../../api";
 import { validateEditSkillForm } from "./validate-edit-skill-form";
 
-export const RESOURCES_PREFIX = "http://213.109.146.203:8080/api/resources/";
+export const RESOURCES_PREFIX = "http://localhost:8080/api/resources/";
 
 export function useMyProfileState() {
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);

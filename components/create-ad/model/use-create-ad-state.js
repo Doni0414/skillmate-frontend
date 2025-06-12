@@ -98,7 +98,7 @@ export function useCreateAdState(user, closePopup) {
             setSkills(response.data);
             setFormData((lastFormData) => ({
               ...lastFormData,
-              skillName: response.data[0].name,
+              skillName: response.data[0]?.name,
             }));
           })
           .catch((error) => {
