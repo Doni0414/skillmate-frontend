@@ -10,7 +10,10 @@ import { FailureMessage } from "../common/failure-message";
 import { FormTextArea } from "../common/form-text-area";
 import { getResourceURLById } from "../api";
 import defaultAvaSrc from "../header/images/ava.png";
+import defaultAdImageSrc from "./images/image-unavailable.png";
 
+const defaultAdImageURL =
+  "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg";
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -78,7 +81,7 @@ function AdContainer({
   return (
     <div
       style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 1) 100%), url(${adImageSrc})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 1) 100%), url(${adImageSrc ? adImageSrc : defaultAdImageURL})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -171,28 +174,30 @@ function AdPopup({ adId, skillName, user, level, description, adImageSrc }) {
           </div>
         </div>
         <Image
-          src={adImageSrc}
+          src={adImageSrc ? adImageSrc : defaultAdImageSrc}
           width={90}
           height={90}
           className="ml-auto w-[90px] h-[90px] rounded-full object-cover"
         />
       </div>
       <div className="px-10">
-        <div className="flex items-center gap-[10px]">
-          <Image
-            src={
-              user.imageResourceId
-                ? getResourceURLById(user.imageResourceId)
-                : defaultAvaSrc
-            }
-            width={40}
-            height={40}
-            className="w-10 h-10 rounded-full"
-          />
-          <div className={clsx(roboto.className, "text-[24px]")}>
-            {user.fullName}
+        <a href={`/profile/${user.id}`}>
+          <div className="flex items-center gap-[10px]">
+            <Image
+              src={
+                user.imageResourceId
+                  ? getResourceURLById(user.imageResourceId)
+                  : defaultAvaSrc
+              }
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full"
+            />
+            <div className={clsx(roboto.className, "text-[24px]")}>
+              {user.fullName}
+            </div>
           </div>
-        </div>
+        </a>
         <div className="ml-10 w-auto text-[25px] leading-[1.2]">
           {description}
         </div>
