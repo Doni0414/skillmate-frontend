@@ -14,7 +14,8 @@ export function UploadImageBox({ className, image, setImage }) {
   const [failureMessage, setFailureMessage] = useState(null);
   const imageInputRef = useRef(null);
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
     imageInputRef.current.click();
   };
 
@@ -60,13 +61,14 @@ export function UploadImageBox({ className, image, setImage }) {
         <div className={clsx(inter.className, "text-[20px]")}>
           Browse your image
         </div>
-        <input
-          onChange={onImageChange}
-          className="hidden"
-          type="file"
-          ref={imageInputRef}
-        />
       </button>
+      <input
+        onChange={onImageChange}
+        className="hidden"
+        accept="image/*"
+        type="file"
+        ref={imageInputRef}
+      />
     </div>
   );
 }

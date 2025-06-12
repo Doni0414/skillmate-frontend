@@ -121,6 +121,8 @@ export function useCreateAdState(user, closePopup) {
         handleDescriptionInput,
         handleUploadImageClick,
         imageInputRef,
-        handleImageInputRefOnChange
+        handleImageInputRefOnChange,
+        adImage,
+        setAdImage
       }
 }

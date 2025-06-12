@@ -9,6 +9,7 @@ import { UploadIcon } from "../common/icons/upload-icon";
 import { SuccessMessage } from "../common/success-message";
 import { useCreateAdState } from "./model/use-create-ad-state";
 import { FailureMessage } from "../common/failure-message";
+import { UploadImageBox } from "../common/upload-image-box";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -31,11 +32,10 @@ export function CreateAdPopup({ user, closePopup }) {
     skillsValues,
     handleOnSkillNameSelect,
     handleDescriptionInput,
-    handleUploadImageClick,
-    imageInputRef,
-    handleImageInputRefOnChange,
     failureMessage,
     isFailureMessageVisible,
+    adImage,
+    setAdImage,
   } = useCreateAdState(user, closePopup);
   return (
     <form
@@ -60,6 +60,11 @@ export function CreateAdPopup({ user, closePopup }) {
       <div className="mb-10 w-fit mx-auto text-black/70 text-[26px] font-semibold leading-[24px]">
         Create ad
       </div>
+      <UploadImageBox
+        className="mx-auto w-fit mb-10"
+        image={adImage}
+        setImage={setAdImage}
+      />
       <Select
         className="mb-10 w-[609px] pl-[12px] py-[17px] bg-[#F9F9F9] text-black/70 text-[15px] border border-black/10 rounded-[7px] focus:outline-none"
         values={skillsValues}
@@ -73,21 +78,6 @@ export function CreateAdPopup({ user, closePopup }) {
         className="block w-[609px] h-[130px] pl-[12px] pt-[17px] bg-[#F9F9F9] text-black/70 text-[15px] border border-black/10 rounded-[7px] focus:outline-none resize-none"
         outerContainerClassName="mb-10"
         errorText={formErrors.skillDescriptionError}
-      />
-      <button
-        onClick={handleUploadImageClick}
-        className="mb-[53px] flex items-center gap-[6px] px-[30px] py-[10px] bg-[#FFEDB8] rounded-[20px] cursor-pointer"
-      >
-        <div className={clsx(firaSans.className, "text-[20px]")}>
-          Upload image
-        </div>
-        <UploadIcon />
-      </button>
-      <input
-        type="file"
-        className="hidden"
-        ref={imageInputRef}
-        onChange={handleImageInputRefOnChange}
       />
       <div className="flex justify-end">
         <button
