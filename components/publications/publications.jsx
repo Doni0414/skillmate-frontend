@@ -21,6 +21,9 @@ import { PagedElement } from "../common/paged-element";
 import { PlusIcon } from "../common/icons/plus-icon";
 import defaultAvaSrc from "../header/images/ava.png";
 import defaultAdImageSrc from "../common/images/image-unavailable.png";
+import { usePublicationState } from "./model/use-publication-state";
+import { useCommentsState } from "./model/use-comments-state";
+import { useMoreCommentsButtonState } from "./model/use-more-comments-button-state";
 
 export function Publications({ publications, user }) {
   return (
@@ -33,39 +36,15 @@ export function Publications({ publications, user }) {
 }
 
 function Publication({ publication, user }) {
-  const COMMENTS_PER_PAGE = 3;
-  const [author, setAuthor] = useState({});
-  const [comments, setComments] = useState([]);
-  const [commentsPage, setCommentsPage] = useState(1);
-  const publicationRef = useRef(null);
+  const { author, publicationRef } = usePublicationState(publication, user);
 
-  console.log("current page: " + commentsPage);
+  const { comments, setCurrentCommentsPerPage, COMMENTS_PER_PAGE } =
+    useCommentsState(publication);
 
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(() => {
-      getCommentsByPublicationId(
-        publication.id,
-        commentsPage,
-        COMMENTS_PER_PAGE,
-      ).then((response) => {
-        if (response.data.content.length > 0) {
-          setComments((lastComments) => [
-            ...lastComments,
-            ...response.data.content,
-          ]);
-        }
-      });
-    }, 3_000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [commentsPage, publication]);
-
-  const fetchData = async () => {
-    const fetchedAuthor = await getUserById(publication.creatorId);
-    setAuthor(fetchedAuthor.data);
-  };
+  const { handleClickOnMoreCommentsButton } = useMoreCommentsButtonState(
+    setCurrentCommentsPerPage,
+    COMMENTS_PER_PAGE,
+  );
 
   return (
     <div
@@ -102,24 +81,18 @@ function Publication({ publication, user }) {
         publication={publication}
         user={user}
       />
-      <CommentsMoreButton page={commentsPage} setPage={setCommentsPage} />
+      <CommentsMoreButton handleClick={handleClickOnMoreCommentsButton} />
     </div>
   );
 }
 
-function CommentsMoreButton({ className, setPage }) {
-  const onClick = () => {
-    setPage((lastPage) => {
-      return lastPage + 1;
-    });
-  };
-
+function CommentsMoreButton({ className, handleClick }) {
   return (
     <div className="flex justify-center">
       <button
         title="More comments"
         className="cursor-pointer"
-        onClick={onClick}
+        onClick={handleClick}
       >
         <PlusIcon />
       </button>
@@ -294,7 +267,7 @@ function AddCommentContainer({ user, publication }) {
 
   const handleSendCommentClick = () => {
     const commentLength = commentText.trim().length;
-    if (commentLength === 0 || commentText > MAX_COMMENT_LENGTH) {
+    if (commentLength === 0 || commentLength > MAX_COMMENT_LENGTH) {
       return;
     }
 
