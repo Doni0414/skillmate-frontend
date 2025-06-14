@@ -6,6 +6,7 @@ import { DeleteButton } from "./ui/delete-button";
 import { SeeRequestsButton } from "./ui/see-requests-button";
 import { useAdCardState } from "./model/use-ad-card-state";
 import { SeeRequestsPopup } from "./see-requests-popup";
+import { defaultAdImageURL } from "../../common/default-images-url";
 
 export function AdCard({ ad, isOwn }) {
   const {
@@ -22,7 +23,7 @@ export function AdCard({ ad, isOwn }) {
           <div
             className="object-cover w-[390px] h-[200px] rounded-lg"
             style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 1) 100%), url(${getResourceURLById(ad.imageResourceId)})`,
+              backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 1) 100%), url(${ad.imageResourceId ? getResourceURLById(ad.imageResourceId) : defaultAdImageURL})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",

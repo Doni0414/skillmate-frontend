@@ -20,6 +20,7 @@ import { Comments } from "./comments";
 import { PagedElement } from "../common/paged-element";
 import { PlusIcon } from "../common/icons/plus-icon";
 import defaultAvaSrc from "../header/images/ava.png";
+import defaultAdImageSrc from "../common/images/image-unavailable.png";
 
 export function Publications({ publications, user }) {
   return (
@@ -49,7 +50,10 @@ function Publication({ publication, user }) {
         COMMENTS_PER_PAGE,
       ).then((response) => {
         if (response.data.content.length > 0) {
-          setComments(response.data.content);
+          setComments((lastComments) => [
+            ...lastComments,
+            ...response.data.content,
+          ]);
         }
       });
     }, 3_000);
@@ -72,7 +76,11 @@ function Publication({ publication, user }) {
       <Image
         width={483}
         height={295}
-        src={getResourceURLById(publication.resourceId)}
+        src={
+          publication.resourceId
+            ? getResourceURLById(publication.resourceId)
+            : defaultAdImageSrc
+        }
         alt="publication-image"
         className="mb-[14px]"
       />

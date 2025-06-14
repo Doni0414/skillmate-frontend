@@ -41,7 +41,7 @@ export function CreateAdPopup({ user, closePopup }) {
     <form
       onSubmit={handleOnSubmit}
       className={clsx(
-        "px-[66px] py-[50px] border-4 border-[#FFC107] rounded-[20px] bg-white",
+        "px-[66px] py-[50px] overflow-y-auto border-4 border-[#FFC107] rounded-[20px] bg-white",
         firaSans.className,
       )}
     >

@@ -10,10 +10,9 @@ import { FailureMessage } from "../common/failure-message";
 import { FormTextArea } from "../common/form-text-area";
 import { getResourceURLById } from "../api";
 import defaultAvaSrc from "../header/images/ava.png";
-import defaultAdImageSrc from "./images/image-unavailable.png";
+import defaultAdImageSrc from "../common/images/image-unavailable.png";
+import { defaultAdImageURL } from "../common/default-images-url";
 
-const defaultAdImageURL =
-  "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg";
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700", "900"],
