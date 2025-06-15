@@ -7,6 +7,7 @@ import { LikesElement } from "./ui/likes-element";
 import { CommentsElement } from "./ui/comments-element";
 import { CategoryLayout } from "./ui/category-layout";
 import defaultAvaSrc from "../header/images/ava.png";
+import defaultPublicationImageSrc from "../common/images/image-unavailable.png";
 
 export function Publication({ publication }) {
   const { author, comments, likesCount, isLiked, handleClickOnLikeButton } =
@@ -40,7 +41,7 @@ export function Publication({ publication }) {
           src={
             publication.resourceId
               ? getResourceURLById(publication.resourceId)
-              : defaultAvaSrc
+              : defaultPublicationImageSrc
           }
           width={341}
           height={233}
