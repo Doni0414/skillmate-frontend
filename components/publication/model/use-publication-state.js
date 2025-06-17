@@ -18,26 +18,28 @@ export function usePublicationState(publication) {
                     console.error("Error fetching author data:", error);
                 });
 
-            getCommentsByPublicationId(publication.id, 1, 10000000)
-            .then(response => {
-                setComments(response.data.content);
-            }).catch(error => {
-                console.error("Error fetching comments:", error);
-            });
+            const interval = setInterval(() => {
+                getCommentsByPublicationId(publication.id, 1, 10000000)
+                .then(response => {
+                    setComments(response.data.content);
+                }).catch(error => {
+                    console.error("Error fetching comments:", error);
+                });
 
-            getLikesCountByPublicationId(publication.id)
-            .then(response => {
-                setLikesCount(response.data);
-            }).catch(error => {
-                console.error("Error fetching likes count:", error);
-            });
+                getLikesCountByPublicationId(publication.id)
+                .then(response => {
+                    setLikesCount(response.data);
+                }).catch(error => {
+                    console.error("Error fetching likes count:", error);
+                });
 
-            getIsLikedByPublicationId(publication.id)
-            .then(response => {
-                setIsLiked(response.data);
-            }).catch(error => {
-                console.error("Error fetching is liked:", error);
-            });
+                getIsLikedByPublicationId(publication.id)
+                .then(response => {
+                    setIsLiked(response.data);
+                }).catch(error => {
+                    console.error("Error fetching is liked:", error);
+                });
+            }, 1000);
         }
     }, [publication]);
 
